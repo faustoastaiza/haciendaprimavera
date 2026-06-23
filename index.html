@@ -2009,6 +2009,56 @@ button:focus-visible {
   </div>
 </header>
 
+<!-- ═══ TOUR 360° ═══ -->
+<section class="section tour360" id="tour360">
+  <div class="tour360-header">
+    <p class="section-eyebrow reveal">Experiencia Inmersiva</p>
+    <h2 class="section-title reveal stagger-1">Recorre el terreno,<br><em>antes de elegirlo</em></h2>
+    <div class="divider-gold reveal stagger-2"></div>
+    <p class="section-subtitle reveal stagger-2">Sumergete en una vista panoramica de 360 grados sobre Hacienda Primavera. Arrastra para mirar alrededor, acerca el detalle y descubre cada rincon del paisaje cafetero como si ya estuvieras alli.</p>
+  </div>
+
+  <div class="tour360-stage reveal-scale" id="tour360-stage">
+    <div id="panorama-container" aria-label="Vista panoramica 360 grados de Hacienda Primavera"></div>
+
+    <div class="tour360-cover" id="tour360-cover">
+      <div class="tour360-cover-icon" aria-hidden="true">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <circle cx="12" cy="12" r="9"/>
+          <ellipse cx="12" cy="12" rx="9" ry="4"/>
+          <path d="M3 12h18M12 3v18"/>
+        </svg>
+      </div>
+      <h3>Una mirada de 360&deg; al paisaje cafetero</h3>
+      <p>Activa el recorrido interactivo y explora la experiencia Hacienda Primavera desde cualquier angulo.</p>
+      <button class="tour360-start" id="tour360-start" type="button" aria-label="Iniciar tour 360 grados">
+        Iniciar tour 360&deg;
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+
+    <div class="tour360-loader" aria-hidden="true">
+      <div class="tour360-spinner"></div>
+      <span>Cargando experiencia</span>
+    </div>
+  </div>
+
+  <div class="tour360-hint reveal stagger-3" aria-hidden="true">
+    <span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l-6 7 6 7M15 5l6 7-6 7"/></svg>
+      Arrastra para mirar
+    </span>
+    <span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M8 11h6M11 8v6"/></svg>
+      Rueda o pellizca para zoom
+    </span>
+    <span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>
+      Pantalla completa disponible
+    </span>
+  </div>
+</section>
+
 <!-- ═══ LOTES / VISTAS CARDINALES ═══ -->
 <section class="section lotes" id="lotes">
   <div class="section-container">
@@ -2286,89 +2336,6 @@ button:focus-visible {
   </div>
 </section>
 
-<!-- ═══ INTERIORS MOSAIC ═══ -->
-<section class="section interiors">
-  <div class="section-container">
-    <p class="section-eyebrow reveal">Interiores</p>
-    <h2 class="section-title reveal stagger-1">Espacios que<br><em>inspiran serenidad</em></h2>
-    <div class="divider-gold reveal stagger-2"></div>
-    <p class="section-subtitle reveal stagger-2">Acabados de primera calidad, ventanales panoramicos y una paleta de materiales que dialoga con la naturaleza circundante.</p>
-
-    <div class="interiors-mosaic">
-      <div class="mosaic-item reveal-scale stagger-1" data-lightbox>
-        <img src="img/hacienda-primavera-sala-comedor-doble-altura-ventanales.webp"
-             alt="Sala comedor con doble altura y ventanales panoramicos con vista al jardin"
-             loading="lazy">
-      </div>
-      <div class="mosaic-item reveal-scale stagger-2" data-lightbox>
-        <img src="img/hacienda-primavera-cocina-moderna-isla-central-electrodomesticos.webp"
-             alt="Cocina moderna con isla central y electrodomesticos de acero inoxidable"
-             loading="lazy">
-      </div>
-      <div class="mosaic-item reveal-scale stagger-3" data-lightbox>
-        <img src="img/hacienda-primavera-habitacion-principal-master-bedroom-jardin.webp"
-             alt="Habitacion principal con acceso al jardin y luz natural"
-             loading="lazy">
-      </div>
-      <div class="mosaic-item reveal-scale stagger-4" data-lightbox>
-        <img src="img/hacienda-primavera-pasillo-interior-ventanales-jardin.webp"
-             alt="Pasillo interior iluminado por ventanales con vista al jardin"
-             loading="lazy">
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ TOUR 360° ═══ -->
-<section class="section tour360" id="tour360">
-  <div class="tour360-header">
-    <p class="section-eyebrow reveal">Experiencia Inmersiva</p>
-    <h2 class="section-title reveal stagger-1">Recorre tu villa,<br><em>antes de habitarla</em></h2>
-    <div class="divider-gold reveal stagger-2"></div>
-    <p class="section-subtitle reveal stagger-2">Sumergete en una vista panoramica de 360 grados. Arrastra para mirar alrededor, acerca el detalle y descubre cada rincon como si ya estuvieras alli.</p>
-  </div>
-
-  <div class="tour360-stage reveal-scale" id="tour360-stage">
-    <div id="panorama-container" aria-label="Vista panoramica 360 grados de Hacienda Primavera"></div>
-
-    <div class="tour360-cover" id="tour360-cover">
-      <div class="tour360-cover-icon" aria-hidden="true">
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-          <circle cx="12" cy="12" r="9"/>
-          <ellipse cx="12" cy="12" rx="9" ry="4"/>
-          <path d="M3 12h18M12 3v18"/>
-        </svg>
-      </div>
-      <h3>Una mirada de 360&deg; al paisaje cafetero</h3>
-      <p>Activa el recorrido interactivo y explora la experiencia Hacienda Primavera desde cualquier angulo.</p>
-      <button class="tour360-start" id="tour360-start" type="button" aria-label="Iniciar tour 360 grados">
-        Iniciar tour 360&deg;
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </button>
-    </div>
-
-    <div class="tour360-loader" aria-hidden="true">
-      <div class="tour360-spinner"></div>
-      <span>Cargando experiencia</span>
-    </div>
-  </div>
-
-  <div class="tour360-hint reveal stagger-3" aria-hidden="true">
-    <span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l-6 7 6 7M15 5l6 7-6 7"/></svg>
-      Arrastra para mirar
-    </span>
-    <span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M8 11h6M11 8v6"/></svg>
-      Rueda o pellizca para zoom
-    </span>
-    <span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>
-      Pantalla completa disponible
-    </span>
-  </div>
-</section>
-
 <!-- ═══ GALLERY ═══ -->
 <section class="section gallery" id="galeria">
   <div class="gallery-header">
@@ -2378,6 +2345,26 @@ button:focus-visible {
   </div>
 
   <div class="gallery-track" role="region" aria-label="Galeria de imagenes del proyecto" tabindex="0">
+    <div class="gallery-item" data-lightbox>
+      <img src="img/hacienda-primavera-sala-comedor-doble-altura-ventanales.webp"
+           alt="Sala comedor con doble altura y ventanales panoramicos con vista al jardin"
+           loading="lazy">
+    </div>
+    <div class="gallery-item" data-lightbox>
+      <img src="img/hacienda-primavera-cocina-moderna-isla-central-electrodomesticos.webp"
+           alt="Cocina moderna con isla central y electrodomesticos de acero inoxidable"
+           loading="lazy">
+    </div>
+    <div class="gallery-item" data-lightbox>
+      <img src="img/hacienda-primavera-habitacion-principal-master-bedroom-jardin.webp"
+           alt="Habitacion principal con acceso al jardin y luz natural"
+           loading="lazy">
+    </div>
+    <div class="gallery-item" data-lightbox>
+      <img src="img/hacienda-primavera-pasillo-interior-ventanales-jardin.webp"
+           alt="Pasillo interior iluminado por ventanales con vista al jardin"
+           loading="lazy">
+    </div>
     <div class="gallery-item" data-lightbox>
       <img src="img/hacienda-primavera-villa-piscina-terraza-cubierta-exterior-02.webp"
            alt="Vista exterior de villa con terraza cubierta y piscina privada"
