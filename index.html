@@ -1957,12 +1957,12 @@ button:focus-visible {
     </a>
 
     <div class="nav-links" role="menubar">
-      <a href="#lotes" role="menuitem">Lotes</a>
-      <a href="#tour360" role="menuitem">Tour 360&deg;</a>
       <a href="#proyecto" role="menuitem">Proyecto</a>
-      <a href="#viviendas" role="menuitem">Construccion</a>
+      <a href="#estilo-de-vida" role="menuitem">Estilo de Vida</a>
+      <a href="#viviendas" role="menuitem">Viviendas</a>
+      <a href="#galeria" role="menuitem">Galeria</a>
       <a href="#precios" role="menuitem">Precios</a>
-      <a href="#contacto" class="nav-cta" role="menuitem">Reservar lote</a>
+      <a href="#contacto" class="nav-cta" role="menuitem">Contactar</a>
     </div>
 
     <button class="nav-hamburger" aria-label="Abrir menu de navegacion" aria-expanded="false">
@@ -1975,13 +1975,13 @@ button:focus-visible {
 
 <!-- Mobile Menu -->
 <div class="nav-mobile" role="dialog" aria-label="Menu de navegacion movil" aria-hidden="true">
-  <a href="#lotes">Lotes</a>
-  <a href="#tour360">Tour 360&deg;</a>
   <a href="#proyecto">Proyecto</a>
-  <a href="#viviendas">Construccion</a>
+  <a href="#estilo-de-vida">Estilo de Vida</a>
+  <a href="#viviendas">Viviendas</a>
   <a href="#galeria">Galeria</a>
   <a href="#precios">Precios</a>
-  <a href="#contacto">Reservar lote</a>
+  <a href="#tour360">Tour 360&deg;</a>
+  <a href="#contacto">Contactar</a>
 </div>
 
 <!-- ═══ HERO ═══ -->
@@ -1993,14 +1993,14 @@ button:focus-visible {
   </div>
   <div class="hero-overlay" aria-hidden="true"></div>
   <div class="hero-content">
-    <p class="hero-eyebrow">Eje Cafetero Colombiano &mdash; 61 Lotes Campestres</p>
-    <h1 class="hero-title">Construye la casa<br>de tus <em>suenos</em></h1>
-    <p class="hero-subtitle">Tu lote en el corazon del Paisaje Cultural Cafetero. Reserva el terreno perfecto para edificar la villa que siempre imaginaste, rodeado de naturaleza y privacidad.</p>
+    <p class="hero-eyebrow">Eje Cafetero Colombiano &mdash; 61 Villas Exclusivas</p>
+    <h1 class="hero-title">Donde la vida<br>florece <em>en calma</em></h1>
+    <p class="hero-subtitle">Villas campestres con piscina privada, arquitectura contemporanea y la serenidad del paisaje cafetero. Un refugio disenado para quienes eligen vivir extraordinariamente.</p>
     <div class="hero-actions">
-      <a href="#lotes" class="btn-primary">Ver lotes disponibles
+      <a href="#contacto" class="btn-primary">Agendar visita
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
-      <a href="#tour360" class="btn-secondary">Tour 360&deg; del terreno</a>
+      <a href="#proyecto" class="btn-secondary">Conocer el proyecto</a>
     </div>
   </div>
   <div class="hero-scroll-hint" aria-hidden="true">
@@ -2008,141 +2008,6 @@ button:focus-visible {
     <div class="scroll-line"></div>
   </div>
 </header>
-
-<!-- ═══ TOUR 360° ═══ -->
-<section class="section tour360" id="tour360">
-  <div class="tour360-header">
-    <p class="section-eyebrow reveal">Experiencia Inmersiva</p>
-    <h2 class="section-title reveal stagger-1">Recorre el terreno,<br><em>antes de elegirlo</em></h2>
-    <div class="divider-gold reveal stagger-2"></div>
-    <p class="section-subtitle reveal stagger-2">Sumergete en una vista panoramica de 360 grados sobre Hacienda Primavera. Arrastra para mirar alrededor, acerca el detalle y descubre cada rincon del paisaje cafetero como si ya estuvieras alli.</p>
-  </div>
-
-  <div class="tour360-stage reveal-scale" id="tour360-stage">
-    <div id="panorama-container" aria-label="Vista panoramica 360 grados de Hacienda Primavera"></div>
-
-    <div class="tour360-cover" id="tour360-cover">
-      <div class="tour360-cover-icon" aria-hidden="true">
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-          <circle cx="12" cy="12" r="9"/>
-          <ellipse cx="12" cy="12" rx="9" ry="4"/>
-          <path d="M3 12h18M12 3v18"/>
-        </svg>
-      </div>
-      <h3>Una mirada de 360&deg; al paisaje cafetero</h3>
-      <p>Activa el recorrido interactivo y explora la experiencia Hacienda Primavera desde cualquier angulo.</p>
-      <button class="tour360-start" id="tour360-start" type="button" aria-label="Iniciar tour 360 grados">
-        Iniciar tour 360&deg;
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </button>
-    </div>
-
-    <div class="tour360-loader" aria-hidden="true">
-      <div class="tour360-spinner"></div>
-      <span>Cargando experiencia</span>
-    </div>
-  </div>
-
-  <div class="tour360-hint reveal stagger-3" aria-hidden="true">
-    <span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l-6 7 6 7M15 5l6 7-6 7"/></svg>
-      Arrastra para mirar
-    </span>
-    <span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M8 11h6M11 8v6"/></svg>
-      Rueda o pellizca para zoom
-    </span>
-    <span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>
-      Pantalla completa disponible
-    </span>
-  </div>
-</section>
-
-<!-- ═══ LOTES / VISTAS CARDINALES ═══ -->
-<section class="section lotes" id="lotes">
-  <div class="section-container">
-    <div class="lotes-header">
-      <p class="section-eyebrow reveal">Lotes Disponibles</p>
-      <h2 class="section-title reveal stagger-1">Elige tu vista,<br>construye tu <em>hogar</em></h2>
-      <div class="divider-gold reveal stagger-2"></div>
-      <p class="section-subtitle reveal stagger-2">61 lotes campestres orientados estrategicamente para capturar lo mejor del paisaje cafetero. Reserva el tuyo y disena la casa que siempre imaginaste, con la libertad de elegir tu vista al amanecer, al atardecer y al horizonte de montanas.</p>
-    </div>
-
-    <div class="lotes-grid">
-      <div class="lote-card reveal-scale stagger-1" data-lightbox>
-        <img src="assets/hacienda-primavera-vista-norte.webp"
-             alt="Vista norte de Hacienda Primavera - paisaje cafetero y montanas"
-             loading="lazy">
-        <div class="lote-card-compass" aria-hidden="true">N</div>
-        <div class="lote-card-overlay">
-          <h3>Vista <em>Norte</em></h3>
-          <p>Lotes orientados al amanecer sobre las montanas del Eje Cafetero.</p>
-        </div>
-      </div>
-
-      <div class="lote-card reveal-scale stagger-2" data-lightbox>
-        <img src="assets/hacienda-primavera-vista-sur.webp"
-             alt="Vista sur de Hacienda Primavera - panorama del paisaje cafetero"
-             loading="lazy">
-        <div class="lote-card-compass" aria-hidden="true">S</div>
-        <div class="lote-card-overlay">
-          <h3>Vista <em>Sur</em></h3>
-          <p>Lotes con vista despejada al valle y los cafetales tradicionales.</p>
-        </div>
-      </div>
-
-      <div class="lote-card reveal-scale stagger-1" data-lightbox>
-        <img src="assets/hacienda-primavera-vista-este.webp"
-             alt="Vista este de Hacienda Primavera - amanecer sobre el paisaje cafetero"
-             loading="lazy">
-        <div class="lote-card-compass" aria-hidden="true">E</div>
-        <div class="lote-card-overlay">
-          <h3>Vista <em>Este</em></h3>
-          <p>Sol naciente y bosques nativos, ideales para terrazas matinales.</p>
-        </div>
-      </div>
-
-      <div class="lote-card reveal-scale stagger-2" data-lightbox>
-        <img src="assets/hacienda-primavera-vista-oeste.webp"
-             alt="Vista oeste de Hacienda Primavera - atardecer sobre el paisaje cafetero"
-             loading="lazy">
-        <div class="lote-card-compass" aria-hidden="true">O</div>
-        <div class="lote-card-overlay">
-          <h3>Vista <em>Oeste</em></h3>
-          <p>Atardeceres dorados sobre la cordillera, los mas codiciados del proyecto.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="lotes-stats reveal">
-      <div class="lote-stat">
-        <div class="lote-stat-number">61</div>
-        <div class="lote-stat-label">Lotes totales</div>
-      </div>
-      <div class="lote-stat">
-        <div class="lote-stat-number">200+</div>
-        <div class="lote-stat-label">m&sup2; por lote</div>
-      </div>
-      <div class="lote-stat">
-        <div class="lote-stat-number">4</div>
-        <div class="lote-stat-label">Orientaciones</div>
-      </div>
-      <div class="lote-stat">
-        <div class="lote-stat-number">100%</div>
-        <div class="lote-stat-label">Vista al paisaje</div>
-      </div>
-    </div>
-
-    <div class="lotes-footer">
-      <a href="https://wa.me/573000000000?text=Hola%2C%20me%20interesa%20reservar%20un%20lote%20en%20Hacienda%20Primavera.%20%C2%BFPodrian%20enviarme%20el%20plano%20de%20lotes%20disponibles%3F"
-         target="_blank" rel="noopener noreferrer" class="btn-whatsapp" aria-label="Reservar lote por WhatsApp">
-        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        Solicitar plano de lotes disponibles
-      </a>
-    </div>
-  </div>
-</section>
 
 <!-- ═══ INTRO / FILOSOFIA ═══ -->
 <section class="section intro" id="proyecto">
@@ -2263,10 +2128,10 @@ button:focus-visible {
 <!-- ═══ FLOOR PLANS / VIVIENDAS ═══ -->
 <section class="section floor-plans" id="viviendas">
   <div class="section-container">
-    <p class="section-eyebrow reveal">Modelos de construccion</p>
-    <h2 class="section-title reveal stagger-1">Disena tu casa<br><em>sobre tu lote</em></h2>
+    <p class="section-eyebrow reveal">Viviendas</p>
+    <h2 class="section-title reveal stagger-1">Dos tipologias,<br><em>un mismo estandar</em></h2>
     <div class="divider-gold reveal stagger-2"></div>
-    <p class="section-subtitle reveal stagger-2">Ofrecemos dos tipologias arquitectonicas listas para edificar sobre tu lote, o trabaja con nuestro equipo de Proarquitectura para personalizar tu casa de los suenos.</p>
+    <p class="section-subtitle reveal stagger-2">Espacios generosos, doble altura, ventanales panoramicos y una conexion perfecta entre el interior y el paisaje.</p>
 
     <div class="plans-grid">
       <!-- TIPO A -->
@@ -2579,6 +2444,133 @@ button:focus-visible {
     </div>
 
     <p class="investment-note reveal">* Precios sujetos a disponibilidad y etapa de comercializacion. Consultenos por opciones de financiacion.</p>
+  </div>
+</section>
+
+<!-- ═══ TOUR 360° ═══ -->
+<section class="section tour360" id="tour360">
+  <div class="tour360-header">
+    <p class="section-eyebrow reveal">Experiencia Inmersiva</p>
+    <h2 class="section-title reveal stagger-1">Vive el paisaje,<br><em>antes de habitarlo</em></h2>
+    <div class="divider-gold reveal stagger-2"></div>
+    <p class="section-subtitle reveal stagger-2">Sumergete en una vista panoramica de 360 grados sobre Hacienda Primavera. Arrastra para mirar alrededor, acerca el detalle y descubre cada rincon del paisaje cafetero como si ya estuvieras alli.</p>
+  </div>
+
+  <div class="tour360-stage reveal-scale" id="tour360-stage">
+    <div id="panorama-container" aria-label="Vista panoramica 360 grados de Hacienda Primavera"></div>
+
+    <div class="tour360-cover" id="tour360-cover">
+      <div class="tour360-cover-icon" aria-hidden="true">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <circle cx="12" cy="12" r="9"/>
+          <ellipse cx="12" cy="12" rx="9" ry="4"/>
+          <path d="M3 12h18M12 3v18"/>
+        </svg>
+      </div>
+      <h3>Una mirada de 360&deg; al paisaje cafetero</h3>
+      <p>Activa el recorrido interactivo y explora la experiencia Hacienda Primavera desde cualquier angulo.</p>
+      <button class="tour360-start" id="tour360-start" type="button" aria-label="Iniciar tour 360 grados">
+        Iniciar tour 360&deg;
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+
+    <div class="tour360-loader" aria-hidden="true">
+      <div class="tour360-spinner"></div>
+      <span>Cargando experiencia</span>
+    </div>
+  </div>
+
+  <div class="tour360-hint reveal stagger-3" aria-hidden="true">
+    <span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l-6 7 6 7M15 5l6 7-6 7"/></svg>
+      Arrastra para mirar
+    </span>
+    <span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M8 11h6M11 8v6"/></svg>
+      Rueda o pellizca para zoom
+    </span>
+    <span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>
+      Pantalla completa disponible
+    </span>
+  </div>
+</section>
+
+<!-- ═══ VISTAS DEL TERRENO ═══ -->
+<section class="section lotes" id="lotes">
+  <div class="section-container">
+    <div class="lotes-header">
+      <p class="section-eyebrow reveal">Vistas del Terreno</p>
+      <h2 class="section-title reveal stagger-1">El proyecto<br>desde <em>cuatro angulos</em></h2>
+      <div class="divider-gold reveal stagger-2"></div>
+      <p class="section-subtitle reveal stagger-2">Las 61 villas de Hacienda Primavera se distribuyen sobre un terreno orientado estrategicamente para que cada vivienda capture lo mejor del paisaje cafetero: amaneceres sobre las montanas, atardeceres dorados y vistas despejadas al valle.</p>
+    </div>
+
+    <div class="lotes-grid">
+      <div class="lote-card reveal-scale stagger-1" data-lightbox>
+        <img src="assets/hacienda-primavera-vista-norte.webp"
+             alt="Vista norte de Hacienda Primavera - paisaje cafetero y montanas"
+             loading="lazy">
+        <div class="lote-card-compass" aria-hidden="true">N</div>
+        <div class="lote-card-overlay">
+          <h3>Vista <em>Norte</em></h3>
+          <p>Villas con amanecer sobre las montanas del Eje Cafetero.</p>
+        </div>
+      </div>
+
+      <div class="lote-card reveal-scale stagger-2" data-lightbox>
+        <img src="assets/hacienda-primavera-vista-sur.webp"
+             alt="Vista sur de Hacienda Primavera - panorama del paisaje cafetero"
+             loading="lazy">
+        <div class="lote-card-compass" aria-hidden="true">S</div>
+        <div class="lote-card-overlay">
+          <h3>Vista <em>Sur</em></h3>
+          <p>Vista despejada al valle y los cafetales tradicionales.</p>
+        </div>
+      </div>
+
+      <div class="lote-card reveal-scale stagger-1" data-lightbox>
+        <img src="assets/hacienda-primavera-vista-este.webp"
+             alt="Vista este de Hacienda Primavera - amanecer sobre el paisaje cafetero"
+             loading="lazy">
+        <div class="lote-card-compass" aria-hidden="true">E</div>
+        <div class="lote-card-overlay">
+          <h3>Vista <em>Este</em></h3>
+          <p>Sol naciente y bosques nativos, ideales para terrazas matinales.</p>
+        </div>
+      </div>
+
+      <div class="lote-card reveal-scale stagger-2" data-lightbox>
+        <img src="assets/hacienda-primavera-vista-oeste.webp"
+             alt="Vista oeste de Hacienda Primavera - atardecer sobre el paisaje cafetero"
+             loading="lazy">
+        <div class="lote-card-compass" aria-hidden="true">O</div>
+        <div class="lote-card-overlay">
+          <h3>Vista <em>Oeste</em></h3>
+          <p>Atardeceres dorados sobre la cordillera, los mas codiciados del proyecto.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="lotes-stats reveal">
+      <div class="lote-stat">
+        <div class="lote-stat-number">61</div>
+        <div class="lote-stat-label">Villas</div>
+      </div>
+      <div class="lote-stat">
+        <div class="lote-stat-number">200+</div>
+        <div class="lote-stat-label">m&sup2; por vivienda</div>
+      </div>
+      <div class="lote-stat">
+        <div class="lote-stat-number">4</div>
+        <div class="lote-stat-label">Orientaciones</div>
+      </div>
+      <div class="lote-stat">
+        <div class="lote-stat-number">100%</div>
+        <div class="lote-stat-label">Vista al paisaje</div>
+      </div>
+    </div>
   </div>
 </section>
 
