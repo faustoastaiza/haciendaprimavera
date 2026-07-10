@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hacienda Primavera — Vivir entre cafetales | PROA</title>
-<meta name="description" content="61 villas campestres de lujo en el corazón del Eje Cafetero colombiano. Arquitectura contemporánea, piscina privada y naturaleza exuberante. Desarrollado por Proarquitectura.">
+<meta name="description" content="Casas de campo con lote de 2.000 m² en el Eje Cafetero colombiano. 5 tipologías, primera etapa en construcción, respaldo de fiducia y comunidad 100% residencial. Desarrollado por Proarquitectura.">
 <meta name="theme-color" content="#2C3E2D">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -414,6 +414,7 @@ ul, ol { list-style: none; }
   left: 50%;
   transform: translateX(-50%);
   z-index: 2;
+  pointer-events: none;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1967,16 +1968,6 @@ ul, ol { list-style: none; }
   margin: 40px 0;
 }
 
-.investment-desde {
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: .15em;
-  text-transform: uppercase;
-  color: var(--dorado-light);
-  margin-bottom: 8px;
-}
-
 .investment-price {
   font-family: var(--font-display);
   font-size: clamp(48px, 5vw, 72px);
@@ -2138,7 +2129,9 @@ ul, ol { list-style: none; }
 
 .footer-links {
   display: flex;
-  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 24px;
 }
 
 .footer-links a {
@@ -2294,6 +2287,275 @@ ul, ol { list-style: none; }
 }
 
 /* ═══════════════════════════════════════════
+   DYNAMIC ENHANCEMENTS
+   ═══════════════════════════════════════════ */
+
+/* — Hero: Ken Burns slow zoom (combines with parallax translateY) — */
+.hero-bg img {
+  animation: heroKenBurns 14s var(--ease-out-quart) forwards;
+}
+
+@keyframes heroKenBurns {
+  from { scale: 1.1; }
+  to { scale: 1; }
+}
+
+/* — Hero: status badge (Etapa 1) — */
+.hero-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 18px;
+  margin-bottom: 22px;
+  border: 1px solid rgba(184,134,75,.45);
+  border-radius: 100px;
+  background: rgba(26,26,26,.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--crema);
+  opacity: 0;
+  transform: translateY(30px);
+  animation: heroFadeUp .8s var(--ease-out-expo) .15s forwards;
+}
+
+.hero-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dorado-light);
+  animation: statusPulse 2s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(212,167,106,.55); }
+  50% { box-shadow: 0 0 0 8px rgba(212,167,106,0); }
+}
+
+/* — Divider gold: draw-in when revealed — */
+.divider-gold {
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: opacity .8s var(--ease-out-expo) .2s, transform 1s var(--ease-out-expo) .3s;
+}
+
+.divider-gold.visible,
+.visible .divider-gold {
+  transform: scaleX(1);
+}
+
+.amenities-header .divider-gold,
+.faq-header .divider-gold,
+.video-header .divider-gold,
+.tour360-header .divider-gold,
+.lotes-header .divider-gold {
+  transform-origin: center;
+}
+
+/* — Marquee band — */
+.marquee {
+  background: var(--verde-dark);
+  border-top: 1px solid rgba(184,134,75,.25);
+  border-bottom: 1px solid rgba(184,134,75,.25);
+  overflow: hidden;
+  padding: 18px 0;
+  position: relative;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 38s linear infinite;
+}
+
+.marquee:hover .marquee-track { animation-play-state: paused; }
+
+.marquee-group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.marquee span {
+  font-family: var(--font-display);
+  font-size: clamp(16px, 1.5vw, 20px);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--crema);
+  opacity: .85;
+  white-space: nowrap;
+  padding: 0 18px;
+}
+
+.marquee .marquee-dot {
+  color: var(--dorado);
+  font-style: normal;
+  opacity: 1;
+  padding: 0;
+}
+
+@keyframes marqueeScroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* — Trust badges (inversion) — */
+.trust-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 28px 0 8px;
+}
+
+.trust-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 18px;
+  border: 1px solid rgba(184,134,75,.35);
+  background: rgba(184,134,75,.08);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--crema);
+  transition: all .35s var(--ease-out-expo);
+}
+
+.trust-badge:hover {
+  background: rgba(184,134,75,.18);
+  transform: translateY(-2px);
+}
+
+.trust-badge svg {
+  width: 16px;
+  height: 16px;
+  color: var(--dorado-light);
+  flex-shrink: 0;
+}
+
+/* — Investment price block: framing — */
+.investment-price-block {
+  position: relative;
+  padding-left: 24px;
+  border-left: 2px solid var(--dorado);
+}
+
+.investment-price-label {
+  display: inline-block;
+  padding: 5px 14px;
+  margin-bottom: 12px;
+  background: var(--dorado);
+  color: var(--negro);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+/* — Tab underline sweep — */
+.tipo-tab { position: relative; overflow: hidden; }
+
+.tipo-tab::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--dorado);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform .4s var(--ease-out-expo);
+}
+
+.tipo-tab:hover::after,
+.tipo-tab.active::after { transform: scaleX(1); }
+
+/* — Card shine sweep on hover (under overlays/compass) — */
+.amenity-card::before,
+.lote-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,.14) 50%, transparent 60%);
+  transform: translateX(-110%);
+  transition: transform .9s var(--ease-out-quart);
+  pointer-events: none;
+}
+
+.amenity-card:hover::before,
+.lote-card:hover::before { transform: translateX(110%); }
+
+.amenity-card-overlay,
+.lote-card-overlay,
+.lote-card-compass { z-index: 2; }
+
+/* — Lote solo: banner CTA — */
+.lote-solo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(24px, 3vw, 48px);
+  flex-wrap: wrap;
+  margin-top: clamp(48px, 5vw, 72px);
+  padding: clamp(28px, 3.5vw, 48px);
+  background: var(--verde);
+  border: 1px solid rgba(184,134,75,.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.lote-solo::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--dorado), transparent);
+}
+
+.lote-solo-text h3 {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 2.4vw, 34px);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--crema);
+  margin-bottom: 8px;
+}
+
+.lote-solo-text p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(245,241,232,.65);
+  max-width: 520px;
+}
+
+.lote-solo .btn-whatsapp { flex-shrink: 0; }
+
+@media (max-width: 768px) {
+  .lote-solo { flex-direction: column; align-items: flex-start; }
+  .lote-solo .btn-whatsapp { max-width: none; width: 100%; }
+}
+
+/* — Reduced motion: respect user preference — */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .hero-bg img { animation: none; }
+  .marquee-track { animation: none; width: auto; flex-wrap: wrap; justify-content: center; }
+  .marquee-group { flex-wrap: wrap; justify-content: center; }
+  .marquee-group:last-child { display: none; }
+  .hero-status-dot, .whatsapp-float, .video-play-btn,
+  .scroll-line, .tour360-cover-icon { animation: none; }
+  .divider-gold { transform: scaleX(1); transition: none; }
+}
+
+/* ═══════════════════════════════════════════
    FOCUS STATES (a11y)
    ═══════════════════════════════════════════ */
 a:focus-visible,
@@ -2357,14 +2619,15 @@ button:focus-visible {
 <header class="hero" id="inicio">
   <div class="hero-bg">
     <img src="img/hacienda-primavera-vista-aerea-conjunto-residencial-piscinas.webp"
-         alt="Vista aerea del conjunto residencial Hacienda Primavera con piscinas privadas rodeado de vegetacion tropical"
+         alt="Vista aerea del conjunto residencial Hacienda Primavera con piscinas rodeado de vegetacion tropical"
          fetchpriority="high">
   </div>
   <div class="hero-overlay" aria-hidden="true"></div>
   <div class="hero-content">
+    <div class="hero-status"><span class="hero-status-dot" aria-hidden="true"></span>Etapa 1 en construccion</div>
     <p class="hero-eyebrow">Eje Cafetero Colombiano &mdash; 61 Villas Exclusivas</p>
     <h1 class="hero-title">Donde la vida<br>florece <em>en calma</em></h1>
-    <p class="hero-subtitle">Villas campestres con piscina privada, arquitectura contemporanea y la serenidad del paisaje cafetero. Un refugio disenado para quienes eligen vivir extraordinariamente.</p>
+    <p class="hero-subtitle">Casas de campo en lotes de 2.000 m&sup2;, arquitectura contemporanea y la serenidad del paisaje cafetero. Un refugio disenado para quienes eligen vivir extraordinariamente.</p>
     <div class="hero-actions">
       <a href="#contacto" class="btn-primary">Agendar visita
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -2395,16 +2658,16 @@ button:focus-visible {
         <blockquote class="reveal stagger-4">"Disenamos para que cada manana sea un despertar entre la brisa, los arboles frutales y la tranquilidad absoluta."</blockquote>
         <div class="intro-stats reveal stagger-5">
           <div>
-            <div class="intro-stat-number">61</div>
+            <div class="intro-stat-number" data-count="61">61</div>
             <div class="intro-stat-label">Villas</div>
           </div>
           <div>
-            <div class="intro-stat-number">200+</div>
-            <div class="intro-stat-label">m&sup2; por lote</div>
+            <div class="intro-stat-number" data-count="2000" data-suffix=" m&sup2;">2.000 m&sup2;</div>
+            <div class="intro-stat-label">Por lote aprox.</div>
           </div>
           <div>
-            <div class="intro-stat-number">100%</div>
-            <div class="intro-stat-label">Piscina privada</div>
+            <div class="intro-stat-number" data-count="5">5</div>
+            <div class="intro-stat-label">Tipologias</div>
           </div>
         </div>
       </div>
@@ -2450,6 +2713,28 @@ button:focus-visible {
   </div>
 </div>
 
+<!-- ═══ MARQUEE ═══ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <div class="marquee-group">
+      <span>Etapa 1 en construccion</span><span class="marquee-dot">&#9670;</span>
+      <span>Lotes de 2.000 m&sup2; aprox.</span><span class="marquee-dot">&#9670;</span>
+      <span>5 tipologias de vivienda</span><span class="marquee-dot">&#9670;</span>
+      <span>Respaldo de fiducia</span><span class="marquee-dot">&#9670;</span>
+      <span>100% residencial</span><span class="marquee-dot">&#9670;</span>
+      <span>Aeropuerto a 35 minutos</span><span class="marquee-dot">&#9670;</span>
+    </div>
+    <div class="marquee-group">
+      <span>Etapa 1 en construccion</span><span class="marquee-dot">&#9670;</span>
+      <span>Lotes de 2.000 m&sup2; aprox.</span><span class="marquee-dot">&#9670;</span>
+      <span>5 tipologias de vivienda</span><span class="marquee-dot">&#9670;</span>
+      <span>Respaldo de fiducia</span><span class="marquee-dot">&#9670;</span>
+      <span>100% residencial</span><span class="marquee-dot">&#9670;</span>
+      <span>Aeropuerto a 35 minutos</span><span class="marquee-dot">&#9670;</span>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ AMENITIES / ESTILO DE VIDA ═══ -->
 <section class="section amenities" id="estilo-de-vida">
   <div class="section-container">
@@ -2463,11 +2748,11 @@ button:focus-visible {
     <div class="amenities-grid">
       <div class="amenity-card reveal-scale stagger-1">
         <img src="img/hacienda-primavera-villa-piscina-terraza-cubierta-exterior-01.webp"
-             alt="Villa con piscina privada y terraza cubierta en Hacienda Primavera"
+             alt="Villa con piscina y terraza cubierta en Hacienda Primavera"
              loading="lazy">
         <div class="amenity-card-overlay">
-          <h3>Piscina Privada</h3>
-          <p>Cada villa incluye piscina con jacuzzi integrado</p>
+          <h3>Piscina &amp; Jacuzzi</h3>
+          <p>Disponibles como adicionales para personalizar tu villa</p>
         </div>
       </div>
       <div class="amenity-card reveal-scale stagger-2">
@@ -2525,34 +2810,34 @@ button:focus-visible {
     <p class="section-eyebrow reveal">Viviendas</p>
     <h2 class="section-title reveal stagger-1">Cinco tipologias,<br><em>un mismo estandar</em></h2>
     <div class="divider-gold reveal stagger-2"></div>
-    <p class="section-subtitle reveal stagger-2">Casas de campo de una planta con arquitectura contemporanea, entre 168 y 270 m&sup2; construidos. Todas con 3 habitaciones, garaje doble y una conexion perfecta entre el interior y el paisaje cafetero.</p>
+    <p class="section-subtitle reveal stagger-2">Casas de campo de una planta con arquitectura contemporanea, entre 168 y 270 m&sup2; construidos sobre lotes de aprox. 2.000 m&sup2;. Todas con 3 habitaciones, garaje doble y una conexion perfecta entre el interior y el paisaje cafetero. La entrega contempla casa y lote; piscina, jacuzzi, kiosko y modulo de servicio son adicionales.</p>
 
     <!-- Tabs -->
     <div class="tipo-tabs reveal" role="tablist" aria-label="Modelos de vivienda">
-      <button class="tipo-tab active" role="tab" data-tipo="tulipan" aria-selected="true">
+      <button class="tipo-tab active" role="tab" id="tipo-tab-tulipan" aria-controls="tipo-panel-tulipan" data-tipo="tulipan" aria-selected="true">
         <span class="tipo-tab-name">Tulipan</span>
         <span class="tipo-tab-area">168 m&sup2;</span>
       </button>
-      <button class="tipo-tab" role="tab" data-tipo="ilan" aria-selected="false">
+      <button class="tipo-tab" role="tab" id="tipo-tab-ilan" aria-controls="tipo-panel-ilan" data-tipo="ilan" aria-selected="false">
         <span class="tipo-tab-name">Ilan</span>
         <span class="tipo-tab-area">193 m&sup2;</span>
       </button>
-      <button class="tipo-tab" role="tab" data-tipo="arrayan" aria-selected="false">
+      <button class="tipo-tab" role="tab" id="tipo-tab-arrayan" aria-controls="tipo-panel-arrayan" data-tipo="arrayan" aria-selected="false">
         <span class="tipo-tab-name">Arrayan</span>
         <span class="tipo-tab-area">230 m&sup2;</span>
       </button>
-      <button class="tipo-tab" role="tab" data-tipo="urapan" aria-selected="false">
+      <button class="tipo-tab" role="tab" id="tipo-tab-urapan" aria-controls="tipo-panel-urapan" data-tipo="urapan" aria-selected="false">
         <span class="tipo-tab-name">Urapan</span>
         <span class="tipo-tab-area">254 m&sup2;</span>
       </button>
-      <button class="tipo-tab" role="tab" data-tipo="saman" aria-selected="false">
+      <button class="tipo-tab" role="tab" id="tipo-tab-saman" aria-controls="tipo-panel-saman" data-tipo="saman" aria-selected="false">
         <span class="tipo-tab-name">Saman</span>
         <span class="tipo-tab-area">270 m&sup2;</span>
       </button>
     </div>
 
     <!-- TULIPAN -->
-    <div class="tipo-panel active" data-panel="tulipan" role="tabpanel">
+    <div class="tipo-panel active" data-panel="tulipan" id="tipo-panel-tulipan" aria-labelledby="tipo-tab-tulipan" role="tabpanel">
       <div class="tipo-media">
         <div class="tipo-media-main" data-lightbox>
           <img src="img/hacienda-primavera-isometrico-lp1.webp" alt="Render isometrico del modelo Tulipan de Hacienda Primavera con piscina" loading="lazy">
@@ -2596,7 +2881,7 @@ button:focus-visible {
     </div>
 
     <!-- ILAN -->
-    <div class="tipo-panel" data-panel="ilan" role="tabpanel" hidden>
+    <div class="tipo-panel" data-panel="ilan" id="tipo-panel-ilan" aria-labelledby="tipo-tab-ilan" role="tabpanel" hidden>
       <div class="tipo-media">
         <div class="tipo-media-main" data-lightbox>
           <img src="img/hacienda-primavera-isometrico-t1.webp" alt="Render isometrico del modelo Ilan de Hacienda Primavera con piscina" loading="lazy">
@@ -2640,7 +2925,7 @@ button:focus-visible {
     </div>
 
     <!-- ARRAYAN -->
-    <div class="tipo-panel" data-panel="arrayan" role="tabpanel" hidden>
+    <div class="tipo-panel" data-panel="arrayan" id="tipo-panel-arrayan" aria-labelledby="tipo-tab-arrayan" role="tabpanel" hidden>
       <div class="tipo-media">
         <div class="tipo-media-main" data-lightbox>
           <img src="img/hacienda-primavera-isometrico-t2.webp" alt="Render isometrico del modelo Arrayan de Hacienda Primavera con piscina" loading="lazy">
@@ -2684,7 +2969,7 @@ button:focus-visible {
     </div>
 
     <!-- URAPAN -->
-    <div class="tipo-panel" data-panel="urapan" role="tabpanel" hidden>
+    <div class="tipo-panel" data-panel="urapan" id="tipo-panel-urapan" aria-labelledby="tipo-tab-urapan" role="tabpanel" hidden>
       <div class="tipo-media">
         <div class="tipo-media-main" data-lightbox>
           <img src="img/hacienda-primavera-isometrico-t3.webp" alt="Render isometrico del modelo Urapan de Hacienda Primavera con piscina" loading="lazy">
@@ -2728,7 +3013,7 @@ button:focus-visible {
     </div>
 
     <!-- SAMAN -->
-    <div class="tipo-panel" data-panel="saman" role="tabpanel" hidden>
+    <div class="tipo-panel" data-panel="saman" id="tipo-panel-saman" aria-labelledby="tipo-tab-saman" role="tabpanel" hidden>
       <div class="tipo-media">
         <div class="tipo-media-main" data-lightbox>
           <img src="img/hacienda-primavera-isometrico-t4.webp" alt="Render isometrico del modelo Saman de Hacienda Primavera con piscina" loading="lazy">
@@ -2807,7 +3092,7 @@ button:focus-visible {
     </div>
     <div class="gallery-item" data-lightbox>
       <img src="img/hacienda-primavera-villa-piscina-terraza-cubierta-exterior-02.webp"
-           alt="Vista exterior de villa con terraza cubierta y piscina privada"
+           alt="Vista exterior de villa con terraza cubierta y piscina"
            loading="lazy">
     </div>
     <div class="gallery-item" data-lightbox>
@@ -2876,8 +3161,8 @@ button:focus-visible {
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
           </div>
           <div>
-            <h4>Conectividad estrategica</h4>
-            <p>A minutos del centro urbano, aeropuerto y principales vias del Eje Cafetero.</p>
+            <h4>Aeropuerto a 35 minutos</h4>
+            <p>Conexion directa con el aeropuerto y las principales vias del Eje Cafetero, a minutos del centro urbano.</p>
           </div>
         </div>
         <div class="location-feature reveal stagger-3">
@@ -2925,7 +3210,7 @@ button:focus-visible {
           <div class="faq-icon" aria-hidden="true"></div>
         </button>
         <div class="faq-answer" role="region">
-          <div class="faq-answer-inner">El proyecto cuenta con 61 villas campestres distribuidas en lotes generosos que garantizan privacidad y amplias zonas verdes entre cada vivienda. Cada villa incluye piscina privada con jacuzzi.</div>
+          <div class="faq-answer-inner">El proyecto cuenta con 61 villas campestres desarrolladas en 5 etapas, sobre lotes de aproximadamente 2.000 m&sup2; cada uno, que garantizan privacidad y amplias zonas verdes entre cada vivienda. La primera etapa ya se encuentra en construccion.</div>
         </div>
       </div>
 
@@ -2935,7 +3220,7 @@ button:focus-visible {
           <div class="faq-icon" aria-hidden="true"></div>
         </button>
         <div class="faq-answer" role="region">
-          <div class="faq-answer-inner">Ofrecemos dos tipologias: Villa Ceiba (Tipo A) con 3 habitaciones, 3 banos y mas de 200 m&sup2;, y Villa Guadua (Tipo B) con 2 habitaciones, 2 banos y mas de 160 m&sup2;. Ambas incluyen garaje, piscina privada y terraza cubierta.</div>
+          <div class="faq-answer-inner">Ofrecemos cinco tipologias, todas de una planta, con 3 habitaciones y garaje doble: Tulipan (168,15 m&sup2;), Ilan (193,56 m&sup2;), Arrayan (230,70 m&sup2;), Urapan (254,10 m&sup2;) y Saman (270,20 m&sup2;, con estudio). La entrega contempla la casa mas el lote; piscina, jacuzzi, kiosko y modulo de servicio estan disponibles como adicionales.</div>
         </div>
       </div>
 
@@ -2945,7 +3230,7 @@ button:focus-visible {
           <div class="faq-icon" aria-hidden="true"></div>
         </button>
         <div class="faq-answer" role="region">
-          <div class="faq-answer-inner">Hacienda Primavera se encuentra en el Eje Cafetero colombiano, una region declarada Patrimonio de la Humanidad por la UNESCO. Goza de un clima privilegiado entre 18 y 26 grados centigrados y esta a pocos minutos del centro urbano y del aeropuerto.</div>
+          <div class="faq-answer-inner">Hacienda Primavera se encuentra en el Eje Cafetero colombiano, una region declarada Patrimonio de la Humanidad por la UNESCO. Goza de un clima privilegiado entre 18 y 26 grados centigrados, esta a pocos minutos del centro urbano y a solo 35 minutos del aeropuerto.</div>
         </div>
       </div>
 
@@ -2955,7 +3240,27 @@ button:focus-visible {
           <div class="faq-icon" aria-hidden="true"></div>
         </button>
         <div class="faq-answer" role="region">
-          <div class="faq-answer-inner">El proyecto se encuentra en etapa de comercializacion con condiciones preferenciales para los primeros compradores. Contactenos para conocer disponibilidad, precios actualizados y opciones de financiacion directa con la constructora.</div>
+          <div class="faq-answer-inner">La primera etapa del proyecto ya se encuentra en construccion, con condiciones preferenciales para los primeros compradores. La compra se realiza con respaldo de fiducia. Contactenos para conocer disponibilidad, precios actualizados y opciones de financiacion directa con la constructora.</div>
+        </div>
+      </div>
+
+      <div class="faq-item reveal stagger-4">
+        <button class="faq-question" aria-expanded="false">
+          <span>&iquest;Que incluye exactamente la compra?</span>
+          <div class="faq-icon" aria-hidden="true"></div>
+        </button>
+        <div class="faq-answer" role="region">
+          <div class="faq-answer-inner">La compra incluye la casa mas el lote de aproximadamente 2.000 m&sup2;. Es importante aclarar que la piscina, el jacuzzi, el kiosko y el modulo de servicio son adicionales que puede incorporar segun sus preferencias. El valor de casa mas lote es de $1.028.227.100 COP.</div>
+        </div>
+      </div>
+
+      <div class="faq-item reveal stagger-5">
+        <button class="faq-question" aria-expanded="false">
+          <span>&iquest;Puedo destinar mi villa a renta vacacional?</span>
+          <div class="faq-icon" aria-hidden="true"></div>
+        </button>
+        <div class="faq-answer" role="region">
+          <div class="faq-answer-inner">No. Hacienda Primavera es un proyecto 100% residencial: no se permite la renta vacacional. Esto protege la tranquilidad, la privacidad y la valorizacion de la comunidad. Ademas, la compra cuenta con respaldo de fiducia para su total seguridad.</div>
         </div>
       </div>
 
@@ -2980,22 +3285,37 @@ button:focus-visible {
         <p class="section-eyebrow reveal">Inversion</p>
         <h2 class="section-title reveal stagger-1" style="color:var(--crema);">Invierta en<br><em>calidad de vida</em></h2>
         <div class="divider-gold reveal stagger-2"></div>
-        <p class="section-subtitle reveal stagger-2">Hacienda Primavera no es solo un hogar: es un activo que se valoriza en una de las regiones con mayor proyeccion turistica y residencial de Colombia.</p>
+        <p class="section-subtitle reveal stagger-2">Hacienda Primavera no es solo un hogar: es un activo que se valoriza en una de las regiones con mayor valorizacion y proyeccion residencial de Colombia.</p>
 
         <div class="investment-price-block reveal stagger-3">
-          <div class="investment-desde">Viviendas desde</div>
-          <div class="investment-price">$978.000.000</div>
+          <span class="investment-price-label">Casa + Lote</span>
+          <div class="investment-price">$1.028.227.100</div>
           <div class="investment-currency">Pesos colombianos (COP) &middot; Facilidades de pago directo con constructora</div>
         </div>
 
         <ul class="investment-benefits reveal stagger-4">
-          <li>Villa con piscina privada, jacuzzi y terraza cubierta incluidos</li>
-          <li>Lote generoso con arboles frutales y jardin privado</li>
+          <li>La compra incluye la casa y el lote de aprox. 2.000 m&sup2;</li>
+          <li>Piscina, jacuzzi, kiosko y modulo de servicio como adicionales</li>
+          <li>Comunidad 100% residencial &mdash; sin renta vacacional</li>
+          <li>Compra con respaldo de fiducia</li>
           <li>Valorizacion sostenida en el Paisaje Cultural Cafetero (UNESCO)</li>
-          <li>Alta demanda de alquiler vacacional y renta corta</li>
-          <li>Acabados premium listos para habitar</li>
           <li>Financiacion directa con Proarquitectura</li>
         </ul>
+
+        <div class="trust-badges reveal stagger-4">
+          <span class="trust-badge">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+            Fiducia
+          </span>
+          <span class="trust-badge">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4m-4 0v-6h4v6"/></svg>
+            100% Residencial
+          </span>
+          <span class="trust-badge">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 20h20M6 20V9h12v11M10 20v-5h4v5M12 9V4m0 0L8 6m4-2l4 2"/></svg>
+            Etapa 1 en construccion
+          </span>
+        </div>
 
         <div class="investment-cta reveal stagger-5">
           <a href="https://wa.me/573178927252?text=Hola%2C%20me%20interesa%20invertir%20en%20Hacienda%20Primavera.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20sobre%20precios%20y%20disponibilidad%3F"
@@ -3018,7 +3338,7 @@ button:focus-visible {
       </div>
     </div>
 
-    <p class="investment-note reveal">* Precios sujetos a disponibilidad y etapa de comercializacion. Consultenos por opciones de financiacion.</p>
+    <p class="investment-note reveal">* Valor de casa mas lote. Piscina, jacuzzi, kiosko y modulo de servicio son adicionales. Precios sujetos a disponibilidad y etapa de comercializacion. Consultenos por opciones de financiacion.</p>
   </div>
 </section>
 
@@ -3130,21 +3450,33 @@ button:focus-visible {
 
     <div class="lotes-stats reveal">
       <div class="lote-stat">
-        <div class="lote-stat-number">61</div>
+        <div class="lote-stat-number" data-count="61">61</div>
         <div class="lote-stat-label">Villas</div>
       </div>
       <div class="lote-stat">
-        <div class="lote-stat-number">200+</div>
-        <div class="lote-stat-label">m&sup2; por vivienda</div>
+        <div class="lote-stat-number" data-count="2000" data-suffix=" m&sup2;">2.000 m&sup2;</div>
+        <div class="lote-stat-label">Por lote aprox.</div>
       </div>
       <div class="lote-stat">
-        <div class="lote-stat-number">4</div>
+        <div class="lote-stat-number" data-count="5">5</div>
+        <div class="lote-stat-label">Etapas</div>
+      </div>
+      <div class="lote-stat">
+        <div class="lote-stat-number" data-count="4">4</div>
         <div class="lote-stat-label">Orientaciones</div>
       </div>
-      <div class="lote-stat">
-        <div class="lote-stat-number">100%</div>
-        <div class="lote-stat-label">Vista al paisaje</div>
+    </div>
+
+    <div class="lote-solo reveal">
+      <div class="lote-solo-text">
+        <h3>&iquest;Prefieres construir a tu manera?</h3>
+        <p>Tambien puedes adquirir unicamente el lote y desarrollar tu casa de campo con el acompanamiento de Proarquitectura.</p>
       </div>
+      <a href="https://wa.me/573178927252?text=Hola%2C%20me%20interesa%20comprar%20solo%20un%20lote%20en%20Hacienda%20Primavera.%20%C2%BFPodrian%20darme%20informacion%3F"
+         target="_blank" rel="noopener noreferrer" class="btn-whatsapp" aria-label="Consultar compra de lote por WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Consultar compra de lote
+      </a>
     </div>
   </div>
 </section>
@@ -3165,7 +3497,7 @@ button:focus-visible {
             <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
             Agendar visita al proyecto
           </a>
-          <a href="tel:+576000000" class="btn-whatsapp-outline" aria-label="Llamar a sala de ventas">
+          <a href="tel:+573178927252" class="btn-whatsapp-outline" aria-label="Llamar a sala de ventas">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
             Llamar a sala de ventas
           </a>
@@ -3469,6 +3801,32 @@ button:focus-visible {
     if (e.key === 'ArrowRight') lightboxNext.click();
   });
 
+  // ─── ANIMATED COUNTERS ───────────────────
+  const counters = document.querySelectorAll('[data-count]');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const counterObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (!entry.isIntersecting) return;
+      counterObserver.unobserve(entry.target);
+      const el = entry.target;
+      const target = parseInt(el.getAttribute('data-count'), 10);
+      const suffix = el.getAttribute('data-suffix') || '';
+      if (reducedMotion || !target) return;
+      const duration = 1600;
+      const start = performance.now();
+      function tick(now) {
+        const p = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - p, 4);
+        el.innerHTML = Math.round(target * eased).toLocaleString('es-CO') + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    });
+  }, { threshold: 0.5 });
+
+  counters.forEach(function(el) { counterObserver.observe(el); });
+
   // ─── TIPOLOGIAS TABS + MEDIA SWITCH ──────
   const tipoTabs = document.querySelectorAll('.tipo-tab');
   const tipoPanels = document.querySelectorAll('.tipo-panel');
@@ -3488,6 +3846,22 @@ button:focus-visible {
       });
     });
   });
+
+  // Arrow-key navigation for the tablist (ARIA APG)
+  const tipoTablist = document.querySelector('.tipo-tabs');
+  if (tipoTablist) {
+    tipoTablist.addEventListener('keydown', function(e) {
+      const tabs = Array.from(tipoTabs);
+      const i = tabs.indexOf(document.activeElement);
+      if (i === -1) return;
+      let next = null;
+      if (e.key === 'ArrowRight') next = tabs[(i + 1) % tabs.length];
+      else if (e.key === 'ArrowLeft') next = tabs[(i - 1 + tabs.length) % tabs.length];
+      else if (e.key === 'Home') next = tabs[0];
+      else if (e.key === 'End') next = tabs[tabs.length - 1];
+      if (next) { e.preventDefault(); next.focus(); next.click(); }
+    });
+  }
 
   // Thumbnail -> main image switch (per panel)
   document.querySelectorAll('.tipo-panel').forEach(function(panel) {
@@ -3598,7 +3972,7 @@ button:focus-visible {
         e.preventDefault();
         const offset = 80;
         const y = target.getBoundingClientRect().top + window.scrollY - offset;
-        window.scrollTo({ top: y, behavior: 'smooth' });
+        window.scrollTo({ top: y, behavior: reducedMotion ? 'auto' : 'smooth' });
       }
     });
   });
