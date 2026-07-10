@@ -1018,6 +1018,277 @@ ul, ol { list-style: none; }
   background: var(--crema);
 }
 
+/* ── Tipologias tabs ── */
+.tipo-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: clamp(40px, 4vw, 56px);
+}
+
+.tipo-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 14px 22px;
+  border: 1px solid rgba(26,26,26,.12);
+  background: var(--blanco);
+  transition: all .35s var(--ease-out-expo);
+  min-width: 120px;
+}
+
+.tipo-tab:hover {
+  border-color: var(--dorado);
+  transform: translateY(-2px);
+}
+
+.tipo-tab.active {
+  background: var(--verde);
+  border-color: var(--verde);
+}
+
+.tipo-tab-name {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 1.6vw, 22px);
+  font-weight: 500;
+  color: var(--negro);
+  letter-spacing: .02em;
+}
+
+.tipo-tab-area {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  color: var(--negro);
+  opacity: .5;
+}
+
+.tipo-tab.active .tipo-tab-name { color: var(--crema); }
+.tipo-tab.active .tipo-tab-area { color: var(--dorado-light); opacity: 1; }
+
+/* ── Panel ── */
+.tipo-panel {
+  display: none;
+  grid-template-columns: 1.25fr 1fr;
+  gap: clamp(32px, 4vw, 64px);
+  align-items: start;
+  margin-top: clamp(40px, 4vw, 56px);
+}
+
+.tipo-panel.active {
+  display: grid;
+  animation: tipoFade .6s var(--ease-out-expo);
+}
+
+@keyframes tipoFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.tipo-media { position: relative; }
+
+.tipo-media-main {
+  position: relative;
+  aspect-ratio: 16/10;
+  overflow: hidden;
+  background: var(--verde-dark);
+  cursor: zoom-in;
+  box-shadow: 0 16px 50px rgba(26,26,26,.12);
+}
+
+.tipo-media-main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity .4s ease;
+}
+
+.tipo-media-main.is-plan img { object-fit: contain; background: var(--blanco); }
+
+.tipo-media-thumbs {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.tipo-thumb {
+  flex: 1;
+  aspect-ratio: 16/11;
+  overflow: hidden;
+  border: 1px solid rgba(26,26,26,.1);
+  background: var(--blanco);
+  cursor: pointer;
+  position: relative;
+  transition: all .3s ease;
+}
+
+.tipo-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tipo-thumb.is-plan img { object-fit: contain; }
+
+.tipo-thumb.active { border-color: var(--dorado); }
+.tipo-thumb:hover { border-color: var(--dorado-light); }
+
+.tipo-thumb-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 4px 6px;
+  background: rgba(26,26,26,.72);
+  color: var(--crema);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* ── Info side ── */
+.tipo-info-badge {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--dorado);
+  margin-bottom: 8px;
+}
+
+.tipo-info h3 {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 3.2vw, 46px);
+  font-weight: 400;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.tipo-info h3 em { font-style: italic; }
+
+.tipo-info-area {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2vw, 28px);
+  font-weight: 300;
+  color: var(--dorado);
+  margin-bottom: 20px;
+}
+
+.tipo-specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px 0 24px;
+}
+
+.tipo-spec {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  background: var(--blanco);
+  border: 1px solid rgba(26,26,26,.08);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.tipo-spec svg { width: 16px; height: 16px; color: var(--verde); opacity: .8; }
+
+.tipo-program-title,
+.tipo-extra-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--negro);
+  opacity: .45;
+  margin: 24px 0 12px;
+}
+
+.tipo-program {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 20px;
+}
+
+.tipo-program li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--negro);
+  opacity: .75;
+}
+
+.tipo-program li svg {
+  width: 15px;
+  height: 15px;
+  color: var(--dorado);
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.tipo-extras {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tipo-extra {
+  padding: 6px 14px;
+  border: 1px dashed rgba(184,134,75,.5);
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--verde);
+}
+
+.tipo-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 28px;
+  padding: 14px 28px;
+  background: var(--verde);
+  color: var(--crema);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  transition: all .35s var(--ease-out-expo);
+}
+
+.tipo-cta:hover {
+  background: var(--dorado);
+  color: var(--negro);
+  transform: translateY(-2px);
+}
+
+.tipo-cta svg { width: 16px; height: 16px; fill: currentColor; }
+
+.tipo-note {
+  text-align: center;
+  margin-top: clamp(40px, 4vw, 56px);
+  font-size: 12px;
+  font-style: italic;
+  color: var(--negro);
+  opacity: .4;
+}
+
+@media (max-width: 860px) {
+  .tipo-panel { grid-template-columns: 1fr; }
+  .tipo-tab { min-width: 96px; padding: 12px 16px; }
+}
+
+@media (max-width: 500px) {
+  .tipo-program { grid-template-columns: 1fr; }
+}
+
 .plans-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -2248,79 +2519,260 @@ button:focus-visible {
   </div>
 </section>
 
-<!-- ═══ FLOOR PLANS / VIVIENDAS ═══ -->
+<!-- ═══ TIPOLOGIAS / VIVIENDAS ═══ -->
 <section class="section floor-plans" id="viviendas">
   <div class="section-container">
     <p class="section-eyebrow reveal">Viviendas</p>
-    <h2 class="section-title reveal stagger-1">Dos tipologias,<br><em>un mismo estandar</em></h2>
+    <h2 class="section-title reveal stagger-1">Cinco tipologias,<br><em>un mismo estandar</em></h2>
     <div class="divider-gold reveal stagger-2"></div>
-    <p class="section-subtitle reveal stagger-2">Espacios generosos, doble altura, ventanales panoramicos y una conexion perfecta entre el interior y el paisaje.</p>
+    <p class="section-subtitle reveal stagger-2">Casas de campo de una planta con arquitectura contemporanea, entre 168 y 270 m&sup2; construidos. Todas con 3 habitaciones, garaje doble y una conexion perfecta entre el interior y el paisaje cafetero.</p>
 
-    <div class="plans-grid">
-      <!-- TIPO A -->
-      <div class="plan-card reveal-left">
-        <div class="plan-card-image">
-          <img src="img/hacienda-primavera-plano-3d-distribucion-espacios-tipo-a.webp"
-               alt="Plano 3D de la villa Tipo A mostrando la distribucion de espacios con piscina y garaje"
-               loading="lazy">
-          <div class="plan-card-badge">Tipo A</div>
+    <!-- Tabs -->
+    <div class="tipo-tabs reveal" role="tablist" aria-label="Modelos de vivienda">
+      <button class="tipo-tab active" role="tab" data-tipo="tulipan" aria-selected="true">
+        <span class="tipo-tab-name">Tulipan</span>
+        <span class="tipo-tab-area">168 m&sup2;</span>
+      </button>
+      <button class="tipo-tab" role="tab" data-tipo="ilan" aria-selected="false">
+        <span class="tipo-tab-name">Ilan</span>
+        <span class="tipo-tab-area">193 m&sup2;</span>
+      </button>
+      <button class="tipo-tab" role="tab" data-tipo="arrayan" aria-selected="false">
+        <span class="tipo-tab-name">Arrayan</span>
+        <span class="tipo-tab-area">230 m&sup2;</span>
+      </button>
+      <button class="tipo-tab" role="tab" data-tipo="urapan" aria-selected="false">
+        <span class="tipo-tab-name">Urapan</span>
+        <span class="tipo-tab-area">254 m&sup2;</span>
+      </button>
+      <button class="tipo-tab" role="tab" data-tipo="saman" aria-selected="false">
+        <span class="tipo-tab-name">Saman</span>
+        <span class="tipo-tab-area">270 m&sup2;</span>
+      </button>
+    </div>
+
+    <!-- TULIPAN -->
+    <div class="tipo-panel active" data-panel="tulipan" role="tabpanel">
+      <div class="tipo-media">
+        <div class="tipo-media-main" data-lightbox>
+          <img src="img/hacienda-primavera-isometrico-lp1.webp" alt="Render isometrico del modelo Tulipan de Hacienda Primavera con piscina" loading="lazy">
         </div>
-        <div class="plan-card-body">
-          <h3>Villa <em>Ceiba</em></h3>
-          <p style="font-size:14px; opacity:.6; line-height:1.7;">Amplios espacios de estar con doble altura, cocina abierta con isla central, suite principal con bano completo y acceso directo a la terraza y piscina.</p>
-          <div class="plan-card-specs">
-            <div class="plan-spec">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
-              3 Habitaciones
-            </div>
-            <div class="plan-spec">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12h18v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6zM3 12V8a4 4 0 014-4h1a3 3 0 013 3v5"/></svg>
-              3 Banos
-            </div>
-            <div class="plan-spec">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h12M12 6v12"/></svg>
-              200+ m&sup2;
-            </div>
-            <div class="plan-spec">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 20h20M5 20V8l7-5 7 5v12"/><rect x="9" y="12" width="6" height="8"/></svg>
-              Garaje doble
-            </div>
-          </div>
+        <div class="tipo-media-thumbs">
+          <div class="tipo-thumb active" data-src="img/hacienda-primavera-isometrico-lp1.webp"><img src="img/hacienda-primavera-isometrico-lp1.webp" alt="Isometrico Tulipan"><span class="tipo-thumb-label">Isometrico</span></div>
+          <div class="tipo-thumb" data-src="img/hacienda-primavera-planta-lp.webp"><img src="img/hacienda-primavera-planta-lp.webp" alt="Planta Tulipan"><span class="tipo-thumb-label">Planta</span></div>
+          <div class="tipo-thumb is-plan" data-src="img/hacienda-primavera-plano-modelo-tulipan.webp" data-plan><img src="img/hacienda-primavera-plano-modelo-tulipan.webp" alt="Plano tecnico Tulipan"><span class="tipo-thumb-label">Plano</span></div>
         </div>
       </div>
-
-      <!-- TIPO B -->
-      <div class="plan-card reveal-right">
-        <div class="plan-card-image">
-          <img src="img/hacienda-primavera-plano-3d-distribucion-espacios-tipo-b.webp"
-               alt="Plano 3D de la villa Tipo B mostrando distribucion compacta con piscina"
-               loading="lazy">
-          <div class="plan-card-badge">Tipo B</div>
+      <div class="tipo-info">
+        <p class="tipo-info-badge">Modelo Base</p>
+        <h3>Villa <em>Tulipan</em></h3>
+        <div class="tipo-info-area">168,15 m&sup2; construidos</div>
+        <div class="tipo-specs">
+          <span class="tipo-spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 17v-4a2 2 0 012-2h16a2 2 0 012 2v4M4 11V7a2 2 0 012-2h12a2 2 0 012 2v4M6 21v-2M18 21v-2"/></svg>3 Habitaciones</span>
+          <span class="tipo-spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12V6a2 2 0 012-2 2 2 0 012 2M4 12h16v3a4 4 0 01-4 4H8a4 4 0 01-4-4v-3zM6 19l-1 2M18 19l1 2"/></svg>2 Banos</span>
+          <span class="tipo-spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 20h20M5 20V9l7-4 7 4v11"/><rect x="9" y="13" width="6" height="7"/></svg>Garaje doble</span>
         </div>
-        <div class="plan-card-body">
-          <h3>Villa <em>Guadua</em></h3>
-          <p style="font-size:14px; opacity:.6; line-height:1.7;">Diseno eficiente con ambientes integrados, cocina de concepto abierto y generosas areas sociales que se extienden hacia el exterior con terraza cubierta.</p>
-          <div class="plan-card-specs">
-            <div class="plan-spec">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
-              2 Habitaciones
-            </div>
-            <div class="plan-spec">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12h18v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6zM3 12V8a4 4 0 014-4h1a3 3 0 013 3v5"/></svg>
-              2 Banos
-            </div>
-            <div class="plan-spec">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h12M12 6v12"/></svg>
-              160+ m&sup2;
-            </div>
-            <div class="plan-spec">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 20h20M5 20V8l7-5 7 5v12"/><rect x="9" y="12" width="6" height="8"/></svg>
-              Garaje sencillo
-            </div>
-          </div>
+        <p class="tipo-program-title">Programa arquitectonico</p>
+        <ul class="tipo-program">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Habitacion principal con vestier</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Sala-comedor integrada</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Cuarto de ropas</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Despensa</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Deposito</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Balcon en habitacion principal</li>
+        </ul>
+        <p class="tipo-extra-title">Adicionales opcionales</p>
+        <div class="tipo-extras">
+          <span class="tipo-extra">Jacuzzi</span>
+          <span class="tipo-extra">Piscina</span>
+          <span class="tipo-extra">Kiosko</span>
+          <span class="tipo-extra">Modulo de servicio</span>
         </div>
+        <a href="https://wa.me/573178927252?text=Hola%2C%20me%20interesa%20el%20modelo%20Tulipan%20(168%20m2)%20en%20Hacienda%20Primavera." target="_blank" rel="noopener noreferrer" class="tipo-cta">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Cotizar modelo Tulipan
+        </a>
       </div>
     </div>
+
+    <!-- ILAN -->
+    <div class="tipo-panel" data-panel="ilan" role="tabpanel" hidden>
+      <div class="tipo-media">
+        <div class="tipo-media-main" data-lightbox>
+          <img src="img/hacienda-primavera-isometrico-t1.webp" alt="Render isometrico del modelo Ilan de Hacienda Primavera con piscina" loading="lazy">
+        </div>
+        <div class="tipo-media-thumbs">
+          <div class="tipo-thumb active" data-src="img/hacienda-primavera-isometrico-t1.webp"><img src="img/hacienda-primavera-isometrico-t1.webp" alt="Isometrico Ilan"><span class="tipo-thumb-label">Isometrico</span></div>
+          <div class="tipo-thumb" data-src="img/hacienda-primavera-planta-t1.webp"><img src="img/hacienda-primavera-planta-t1.webp" alt="Planta Ilan"><span class="tipo-thumb-label">Planta</span></div>
+          <div class="tipo-thumb is-plan" data-src="img/hacienda-primavera-plano-modelo-ilan.webp" data-plan><img src="img/hacienda-primavera-plano-modelo-ilan.webp" alt="Plano tecnico Ilan"><span class="tipo-thumb-label">Plano</span></div>
+        </div>
+      </div>
+      <div class="tipo-info">
+        <p class="tipo-info-badge">Mas amplitud</p>
+        <h3>Villa <em>Ilan</em></h3>
+        <div class="tipo-info-area">193,56 m&sup2; construidos</div>
+        <div class="tipo-specs">
+          <span class="tipo-spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 17v-4a2 2 0 012-2h16a2 2 0 012 2v4M4 11V7a2 2 0 012-2h12a2 2 0 012 2v4M6 21v-2M18 21v-2"/></svg>3 Habitaciones</span>
+          <span class="tipo-spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12V6a2 2 0 012-2 2 2 0 012 2M4 12h16v3a4 4 0 01-4 4H8a4 4 0 01-4-4v-3zM6 19l-1 2M18 19l1 2"/></svg>4 Banos</span>
+          <span class="tipo-spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 20h20M5 20V9l7-4 7 4v11"/><rect x="9" y="13" width="6" height="7"/></svg>Garaje doble</span>
+        </div>
+        <p class="tipo-program-title">Programa arquitectonico</p>
+        <ul class="tipo-program">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Habitacion principal con vestier</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Sala-comedor y cocina</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Cuarto de ropas</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Mueble de linos</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Despensa y deposito</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Balcon en habitacion principal</li>
+        </ul>
+        <p class="tipo-extra-title">Adicionales opcionales</p>
+        <div class="tipo-extras">
+          <span class="tipo-extra">Jacuzzi</span>
+          <span class="tipo-extra">Piscina</span>
+          <span class="tipo-extra">Kiosko</span>
+          <span class="tipo-extra">Modulo de servicio</span>
+        </div>
+        <a href="https://wa.me/573178927252?text=Hola%2C%20me%20interesa%20el%20modelo%20Ilan%20(193%20m2)%20en%20Hacienda%20Primavera." target="_blank" rel="noopener noreferrer" class="tipo-cta">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Cotizar modelo Ilan
+        </a>
+      </div>
+    </div>
+
+    <!-- ARRAYAN -->
+    <div class="tipo-panel" data-panel="arrayan" role="tabpanel" hidden>
+      <div class="tipo-media">
+        <div class="tipo-media-main" data-lightbox>
+          <img src="img/hacienda-primavera-isometrico-t2.webp" alt="Render isometrico del modelo Arrayan de Hacienda Primavera con piscina" loading="lazy">
+        </div>
+        <div class="tipo-media-thumbs">
+          <div class="tipo-thumb active" data-src="img/hacienda-primavera-isometrico-t2.webp"><img src="img/hacienda-primavera-isometrico-t2.webp" alt="Isometrico Arrayan"><span class="tipo-thumb-label">Isometrico</span></div>
+          <div class="tipo-thumb" data-src="img/hacienda-primavera-planta-t2.webp"><img src="img/hacienda-primavera-planta-t2.webp" alt="Planta Arrayan"><span class="tipo-thumb-label">Planta</span></div>
+          <div class="tipo-thumb is-plan" data-src="img/hacienda-primavera-plano-modelo-arrayan.webp" data-plan><img src="img/hacienda-primavera-plano-modelo-arrayan.webp" alt="Plano tecnico Arrayan"><span class="tipo-thumb-label">Plano</span></div>
+        </div>
+      </div>
+      <div class="tipo-info">
+        <p class="tipo-info-badge">Estar familiar</p>
+        <h3>Villa <em>Arrayan</em></h3>
+        <div class="tipo-info-area">230,70 m&sup2; construidos</div>
+        <div class="tipo-specs">
+          <span class="tipo-spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 17v-4a2 2 0 012-2h16a2 2 0 012 2v4M4 11V7a2 2 0 012-2h12a2 2 0 012 2v4M6 21v-2M18 21v-2"/></svg>3 Habitaciones</span>
+          <span class="tipo-spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12V6a2 2 0 012-2 2 2 0 012 2M4 12h16v3a4 4 0 01-4 4H8a4 4 0 01-4-4v-3zM6 19l-1 2M18 19l1 2"/></svg>4 Banos</span>
+          <span class="tipo-spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 20h20M5 20V9l7-4 7 4v11"/><rect x="9" y="13" width="6" height="7"/></svg>Garaje doble</span>
+        </div>
+        <p class="tipo-program-title">Programa arquitectonico</p>
+        <ul class="tipo-program">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Habitacion principal con vestier</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Estar de habitaciones</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Cocina con isla y alacena</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Cuarto de ropas</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Mueble de linos y deposito</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Balcon en habitacion principal</li>
+        </ul>
+        <p class="tipo-extra-title">Adicionales opcionales</p>
+        <div class="tipo-extras">
+          <span class="tipo-extra">Jacuzzi</span>
+          <span class="tipo-extra">Piscina</span>
+          <span class="tipo-extra">Kiosko</span>
+          <span class="tipo-extra">Modulo de servicio</span>
+        </div>
+        <a href="https://wa.me/573178927252?text=Hola%2C%20me%20interesa%20el%20modelo%20Arrayan%20(230%20m2)%20en%20Hacienda%20Primavera." target="_blank" rel="noopener noreferrer" class="tipo-cta">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Cotizar modelo Arrayan
+        </a>
+      </div>
+    </div>
+
+    <!-- URAPAN -->
+    <div class="tipo-panel" data-panel="urapan" role="tabpanel" hidden>
+      <div class="tipo-media">
+        <div class="tipo-media-main" data-lightbox>
+          <img src="img/hacienda-primavera-isometrico-t3.webp" alt="Render isometrico del modelo Urapan de Hacienda Primavera con piscina" loading="lazy">
+        </div>
+        <div class="tipo-media-thumbs">
+          <div class="tipo-thumb active" data-src="img/hacienda-primavera-isometrico-t3.webp"><img src="img/hacienda-primavera-isometrico-t3.webp" alt="Isometrico Urapan"><span class="tipo-thumb-label">Isometrico</span></div>
+          <div class="tipo-thumb" data-src="img/hacienda-primavera-planta-t3.webp"><img src="img/hacienda-primavera-planta-t3.webp" alt="Planta Urapan"><span class="tipo-thumb-label">Planta</span></div>
+          <div class="tipo-thumb is-plan" data-src="img/hacienda-primavera-plano-modelo-urapan.webp" data-plan><img src="img/hacienda-primavera-plano-modelo-urapan.webp" alt="Plano tecnico Urapan"><span class="tipo-thumb-label">Plano</span></div>
+        </div>
+      </div>
+      <div class="tipo-info">
+        <p class="tipo-info-badge">Gran formato</p>
+        <h3>Villa <em>Urapan</em></h3>
+        <div class="tipo-info-area">254,10 m&sup2; construidos</div>
+        <div class="tipo-specs">
+          <span class="tipo-spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 17v-4a2 2 0 012-2h16a2 2 0 012 2v4M4 11V7a2 2 0 012-2h12a2 2 0 012 2v4M6 21v-2M18 21v-2"/></svg>3 Habitaciones</span>
+          <span class="tipo-spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12V6a2 2 0 012-2 2 2 0 012 2M4 12h16v3a4 4 0 01-4 4H8a4 4 0 01-4-4v-3zM6 19l-1 2M18 19l1 2"/></svg>4 Banos</span>
+          <span class="tipo-spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 20h20M5 20V9l7-4 7 4v11"/><rect x="9" y="13" width="6" height="7"/></svg>Garaje doble</span>
+        </div>
+        <p class="tipo-program-title">Programa arquitectonico</p>
+        <ul class="tipo-program">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Habitacion principal con vestier</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Estar de habitaciones</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Cocina con isla y alacena</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Cuarto de ropas</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Mueble de linos y deposito</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Balcon en habitacion principal</li>
+        </ul>
+        <p class="tipo-extra-title">Adicionales opcionales</p>
+        <div class="tipo-extras">
+          <span class="tipo-extra">Jacuzzi</span>
+          <span class="tipo-extra">Piscina</span>
+          <span class="tipo-extra">Kiosko</span>
+          <span class="tipo-extra">Modulo de servicio</span>
+        </div>
+        <a href="https://wa.me/573178927252?text=Hola%2C%20me%20interesa%20el%20modelo%20Urapan%20(254%20m2)%20en%20Hacienda%20Primavera." target="_blank" rel="noopener noreferrer" class="tipo-cta">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Cotizar modelo Urapan
+        </a>
+      </div>
+    </div>
+
+    <!-- SAMAN -->
+    <div class="tipo-panel" data-panel="saman" role="tabpanel" hidden>
+      <div class="tipo-media">
+        <div class="tipo-media-main" data-lightbox>
+          <img src="img/hacienda-primavera-isometrico-t4.webp" alt="Render isometrico del modelo Saman de Hacienda Primavera con piscina" loading="lazy">
+        </div>
+        <div class="tipo-media-thumbs">
+          <div class="tipo-thumb active" data-src="img/hacienda-primavera-isometrico-t4.webp"><img src="img/hacienda-primavera-isometrico-t4.webp" alt="Isometrico Saman"><span class="tipo-thumb-label">Isometrico</span></div>
+          <div class="tipo-thumb" data-src="img/hacienda-primavera-planta-t4.webp"><img src="img/hacienda-primavera-planta-t4.webp" alt="Planta Saman"><span class="tipo-thumb-label">Planta</span></div>
+          <div class="tipo-thumb is-plan" data-src="img/hacienda-primavera-plano-modelo-saman.webp" data-plan><img src="img/hacienda-primavera-plano-modelo-saman.webp" alt="Plano tecnico Saman"><span class="tipo-thumb-label">Plano</span></div>
+        </div>
+      </div>
+      <div class="tipo-info">
+        <p class="tipo-info-badge">El mas completo</p>
+        <h3>Villa <em>Saman</em></h3>
+        <div class="tipo-info-area">270,20 m&sup2; construidos</div>
+        <div class="tipo-specs">
+          <span class="tipo-spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 17v-4a2 2 0 012-2h16a2 2 0 012 2v4M4 11V7a2 2 0 012-2h12a2 2 0 012 2v4M6 21v-2M18 21v-2"/></svg>3 Habitaciones</span>
+          <span class="tipo-spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12V6a2 2 0 012-2 2 2 0 012 2M4 12h16v3a4 4 0 01-4 4H8a4 4 0 01-4-4v-3zM6 19l-1 2M18 19l1 2"/></svg>4 Banos</span>
+          <span class="tipo-spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 20h20M5 20V9l7-4 7 4v11"/><rect x="9" y="13" width="6" height="7"/></svg>Garaje doble</span>
+          <span class="tipo-spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5V5a2 2 0 012-2h13v18H6a2 2 0 01-2-1.5zM8 7h8M8 11h8"/></svg>Estudio</span>
+        </div>
+        <p class="tipo-program-title">Programa arquitectonico</p>
+        <ul class="tipo-program">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Habitacion principal con vestier</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Estudio independiente</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Estar de habitaciones</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Cocina con isla y alacena</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Cuarto de ropas y mueble de linos</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Balcon en habitacion principal</li>
+        </ul>
+        <p class="tipo-extra-title">Adicionales opcionales</p>
+        <div class="tipo-extras">
+          <span class="tipo-extra">Jacuzzi</span>
+          <span class="tipo-extra">Piscina</span>
+          <span class="tipo-extra">Kiosko</span>
+          <span class="tipo-extra">Modulo de servicio</span>
+        </div>
+        <a href="https://wa.me/573178927252?text=Hola%2C%20me%20interesa%20el%20modelo%20Saman%20(270%20m2)%20en%20Hacienda%20Primavera." target="_blank" rel="noopener noreferrer" class="tipo-cta">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Cotizar modelo Saman
+        </a>
+      </div>
+    </div>
+
+    <p class="tipo-note reveal">Areas construidas aproximadas. Imagenes y planos son representacion artistica del proyecto; los acabados y medidas finales pueden variar.</p>
   </div>
 </section>
 
@@ -2546,12 +2998,12 @@ button:focus-visible {
         </ul>
 
         <div class="investment-cta reveal stagger-5">
-          <a href="https://wa.me/573000000000?text=Hola%2C%20me%20interesa%20invertir%20en%20Hacienda%20Primavera.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20sobre%20precios%20y%20disponibilidad%3F"
+          <a href="https://wa.me/573178927252?text=Hola%2C%20me%20interesa%20invertir%20en%20Hacienda%20Primavera.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20sobre%20precios%20y%20disponibilidad%3F"
              target="_blank" rel="noopener noreferrer" class="btn-whatsapp" aria-label="Solicitar informacion de precios por WhatsApp">
             <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
             Solicitar precios y disponibilidad
           </a>
-          <a href="https://wa.me/573000000000?text=Hola%2C%20quisiera%20agendar%20una%20visita%20a%20Hacienda%20Primavera."
+          <a href="https://wa.me/573178927252?text=Hola%2C%20quisiera%20agendar%20una%20visita%20a%20Hacienda%20Primavera."
              target="_blank" rel="noopener noreferrer" class="btn-whatsapp-outline" aria-label="Agendar visita por WhatsApp" style="border-color:rgba(245,241,232,.15);color:var(--crema);">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
             Agendar visita al proyecto
@@ -2708,7 +3160,7 @@ button:focus-visible {
         <p class="section-subtitle reveal stagger-2">Escribanos directamente por WhatsApp para agendar una visita personalizada al proyecto o resolver cualquier inquietud.</p>
 
         <div class="contact-actions reveal stagger-3">
-          <a href="https://wa.me/573000000000?text=Hola%2C%20me%20interesa%20Hacienda%20Primavera.%20Quisiera%20agendar%20una%20visita%20al%20proyecto."
+          <a href="https://wa.me/573178927252?text=Hola%2C%20me%20interesa%20Hacienda%20Primavera.%20Quisiera%20agendar%20una%20visita%20al%20proyecto."
              target="_blank" rel="noopener noreferrer" class="btn-whatsapp" aria-label="Agendar visita por WhatsApp">
             <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
             Agendar visita al proyecto
@@ -2722,7 +3174,7 @@ button:focus-visible {
         <div class="contact-info reveal stagger-4">
           <div class="contact-info-item">
             <div class="contact-info-label">WhatsApp</div>
-            <div class="contact-info-value">+57 300 000 0000</div>
+            <div class="contact-info-value">+57 317 892 7252</div>
           </div>
           <div class="contact-info-item">
             <div class="contact-info-label">Email</div>
@@ -2766,7 +3218,7 @@ button:focus-visible {
 </footer>
 
 <!-- ═══ WHATSAPP FLOAT ═══ -->
-<a href="https://wa.me/573000000000?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20Hacienda%20Primavera"
+<a href="https://wa.me/573178927252?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20Hacienda%20Primavera"
    class="whatsapp-float"
    target="_blank"
    rel="noopener noreferrer"
@@ -2970,6 +3422,9 @@ button:focus-visible {
 
   function openLightbox(index) {
     currentLightbox = index;
+    // Refresh from live DOM so tab/thumb swaps show the current image
+    const liveImg = lightboxItems[index] && lightboxItems[index].querySelector('img');
+    if (liveImg) { lightboxSrcs[index] = liveImg.src; lightboxAlts[index] = liveImg.alt; }
     lightboxImg.src = lightboxSrcs[index];
     lightboxImg.alt = lightboxAlts[index];
     lightbox.classList.add('active');
@@ -3012,6 +3467,42 @@ button:focus-visible {
     if (e.key === 'Escape') closeLightbox();
     if (e.key === 'ArrowLeft') lightboxPrev.click();
     if (e.key === 'ArrowRight') lightboxNext.click();
+  });
+
+  // ─── TIPOLOGIAS TABS + MEDIA SWITCH ──────
+  const tipoTabs = document.querySelectorAll('.tipo-tab');
+  const tipoPanels = document.querySelectorAll('.tipo-panel');
+
+  tipoTabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      const target = tab.getAttribute('data-tipo');
+      tipoTabs.forEach(function(t) {
+        const on = t === tab;
+        t.classList.toggle('active', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      tipoPanels.forEach(function(p) {
+        const on = p.getAttribute('data-panel') === target;
+        p.classList.toggle('active', on);
+        if (on) { p.removeAttribute('hidden'); } else { p.setAttribute('hidden', ''); }
+      });
+    });
+  });
+
+  // Thumbnail -> main image switch (per panel)
+  document.querySelectorAll('.tipo-panel').forEach(function(panel) {
+    const main = panel.querySelector('.tipo-media-main');
+    const mainImg = main.querySelector('img');
+    const thumbs = panel.querySelectorAll('.tipo-thumb');
+    thumbs.forEach(function(thumb) {
+      thumb.addEventListener('click', function(e) {
+        e.stopPropagation();
+        mainImg.src = thumb.getAttribute('data-src');
+        main.classList.toggle('is-plan', thumb.hasAttribute('data-plan'));
+        thumbs.forEach(function(t) { t.classList.remove('active'); });
+        thumb.classList.add('active');
+      });
+    });
   });
 
   // ─── YOUTUBE FACADE PLAYER ───────────────
