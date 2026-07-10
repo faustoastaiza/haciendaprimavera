@@ -781,6 +781,104 @@ ul, ol { list-style: none; }
 }
 
 /* ═══════════════════════════════════════════
+   VIDEO SECTION
+   ═══════════════════════════════════════════ */
+.video-section {
+  background: var(--negro);
+  color: var(--crema);
+}
+
+.video-section .section-eyebrow { color: var(--dorado); }
+.video-section .section-title { color: var(--crema); }
+.video-section .section-subtitle { color: rgba(245,241,232,.55); }
+
+.video-header {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto clamp(40px, 4vw, 60px);
+}
+
+.video-header .section-subtitle { margin: 0 auto; }
+.video-header .divider-gold { margin: 24px auto; }
+
+.video-frame {
+  position: relative;
+  width: var(--container-wide);
+  margin: 0 auto;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--verde-dark);
+  box-shadow: 0 30px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(184,134,75,.15);
+}
+
+.video-frame img,
+.video-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.video-frame img {
+  object-fit: cover;
+  transition: transform .8s var(--ease-out-expo), filter .5s ease;
+}
+
+.video-frame:hover img {
+  transform: scale(1.04);
+  filter: brightness(.85);
+}
+
+.video-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(26,26,26,.5), rgba(26,26,26,.1));
+  pointer-events: none;
+  transition: opacity .4s ease;
+}
+
+.video-frame.playing::after { opacity: 0; }
+
+.video-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  width: clamp(72px, 8vw, 96px);
+  height: clamp(72px, 8vw, 96px);
+  border-radius: 50%;
+  background: var(--dorado);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .4s var(--ease-out-expo);
+  animation: videoPulse 2.5s ease-in-out infinite;
+}
+
+.video-frame:hover .video-play-btn {
+  background: var(--dorado-light);
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.video-play-btn svg {
+  width: 40%;
+  height: 40%;
+  fill: var(--negro);
+  margin-left: 8%;
+}
+
+@keyframes videoPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(184,134,75,.4); }
+  50% { box-shadow: 0 0 0 24px rgba(184,134,75,0); }
+}
+
+.video-frame.playing .video-play-btn { display: none; }
+
+/* ═══════════════════════════════════════════
    FULL-WIDTH IMAGE BREAK
    ═══════════════════════════════════════════ */
 .image-break {
@@ -2043,6 +2141,31 @@ button:focus-visible {
   </div>
 </section>
 
+<!-- ═══ VIDEO ═══ -->
+<section class="section video-section" id="video">
+  <div class="section-container">
+    <div class="video-header">
+      <p class="section-eyebrow reveal">El Proyecto en Video</p>
+      <h2 class="section-title reveal stagger-1">Descubre Hacienda Primavera<br><em>en movimiento</em></h2>
+      <div class="divider-gold reveal stagger-2"></div>
+      <p class="section-subtitle reveal stagger-2">Un recorrido audiovisual por las villas, el paisaje cafetero y la experiencia de vivir en Hacienda Primavera.</p>
+    </div>
+
+    <div class="video-frame reveal-scale" id="video-frame"
+         data-video="wH-PoqjtrCg"
+         role="button" tabindex="0"
+         aria-label="Reproducir video de Hacienda Primavera">
+      <img src="https://i.ytimg.com/vi/wH-PoqjtrCg/maxresdefault.jpg"
+           alt="Video de presentacion de Hacienda Primavera"
+           loading="lazy"
+           onerror="this.src='https://i.ytimg.com/vi/wH-PoqjtrCg/hqdefault.jpg'">
+      <div class="video-play-btn" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ═══ IMAGE BREAK ═══ -->
 <div class="image-break" aria-hidden="true">
   <img src="img/hacienda-primavera-piscina-jacuzzi-vista-panoramica-campo.webp"
@@ -2890,6 +3013,26 @@ button:focus-visible {
     if (e.key === 'ArrowLeft') lightboxPrev.click();
     if (e.key === 'ArrowRight') lightboxNext.click();
   });
+
+  // ─── YOUTUBE FACADE PLAYER ───────────────
+  const videoFrame = document.getElementById('video-frame');
+  if (videoFrame) {
+    const playVideo = function() {
+      if (videoFrame.classList.contains('playing')) return;
+      const id = videoFrame.getAttribute('data-video');
+      const iframe = document.createElement('iframe');
+      iframe.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+      iframe.setAttribute('title', 'Video de Hacienda Primavera');
+      iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+      iframe.setAttribute('allowfullscreen', '');
+      videoFrame.classList.add('playing');
+      videoFrame.appendChild(iframe);
+    };
+    videoFrame.addEventListener('click', playVideo);
+    videoFrame.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); playVideo(); }
+    });
+  }
 
   // ─── TOUR 360° (Pano2VR inline) ──────────
   const tourStage = document.getElementById('tour360-stage');
