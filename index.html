@@ -324,7 +324,9 @@ strong, b { font-weight: 600; }
   transition-delay: var(--d, 0ms);
 }
 .js [data-reveal].is-in { opacity: 1; transform: none; filter: none; }
-.js .hero [data-reveal]:not([data-reveal="clip"]) { transition-duration: .6s, .7s, .6s; }
+/* Hero: el aparecer arranca con CSS al primer pintado (no espera al JS) para que el LCP móvil no dependa del script */
+@keyframes heroRise { from { opacity: 0; transform: translate3d(0, 22px, 0); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+.js .hero [data-reveal]:not([data-reveal="clip"]) { opacity: 1; transform: none; filter: none; transition: none; animation: heroRise .7s var(--ease) var(--d, 0ms) both; }
 
 .js [data-reveal="clip"] {
   opacity: 1; transform: none; filter: none;
@@ -1247,7 +1249,7 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
   font-size: clamp(2.6rem, 1rem + 7.4vw, 8.4rem); font-weight: 700; letter-spacing: -.055em; line-height: .9;
 }
 .footer-mark .brand-dot { width: .14em; height: .14em; }
-.footer-nav { display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: 40px; padding-block: 22px; border-block: 1px solid var(--rule); }
+.footer-nav { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px 20px; margin-top: 40px; padding-block: 22px; border-block: 1px solid var(--rule); }
 .footer-nav a { color: var(--fg-2); transition: color .3s; }
 .footer-nav a:hover { color: var(--accent); }
 .footer-legal { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 48px; margin-top: 28px; }
@@ -1408,7 +1410,7 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
 
 /* ═══════════════ Móvil: etiquetas legibles (mín. 12 px) ═══════════════ */
 @media (max-width: 640px) {
-  .typo-meta, .typo-val, .pager-dir, .slider-scale, .occ-text .mono,
+  .typo-val, .pager-dir, .slider-scale,
   .lots-stats dd small, .lots-y span, .lots-ref span, .lots-tip, .lots-x { font-size: .75rem; }
   .thumb span { font-size: .75rem; }
 }
@@ -1523,7 +1525,7 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
     <div class="hero-copy">
       <p class="hero-status mono" data-reveal style="--d:60ms"><span class="pulse" aria-hidden="true"></span>Etapa 1 en construcción <span class="sep" aria-hidden="true">/</span> <span class="loc">Casas de campo en el Eje Cafetero, Colombia</span></p>
       <h1 class="hero-title" id="hero-title" data-split style="--d:120ms">Vívela cuando quieras. <span class="hl">Réntala</span> cuando no estés.</h1>
-      <p class="hero-lead" data-reveal style="--d:280ms"><strong>Hacienda Primavera</strong> es un conjunto cerrado de 61 casas de campo de una planta en el Eje Cafetero, con lotes de aprox. 2.000&nbsp;m² y <strong>modelo de rentas cortas</strong>: una segunda vivienda para disfrutar y una inversión que puede generar ingresos mientras vives lejos.</p>
+      <p class="hero-lead" data-reveal style="--d:280ms"><strong>Hacienda Primavera:</strong> 61 casas de campo de una planta en el Eje Cafetero, con lotes de aprox. 2.000&nbsp;m² y <strong>modelo de rentas cortas</strong>. Una segunda vivienda para disfrutar y una inversión que puede generar ingresos mientras vives lejos.</p>
       <div class="hero-ctas" data-reveal style="--d:400ms">
         <a class="btn btn--primary" href="https://wa.me/573178927252?text=Hola%2C%20me%20interesa%20invertir%20en%20Hacienda%20Primavera%20y%20conocer%20el%20modelo%20de%20rentas%20cortas." target="_blank" rel="noopener">
           <svg class="icon icon--fill" aria-hidden="true"><use href="#i-wa"/></svg>Asesoría por WhatsApp
@@ -1735,7 +1737,7 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
   <div class="container">
     <header class="sec-head">
       <p class="sec-index mono"><span class="sec-num">05</span><span>Viviendas</span></p>
-      <h2 class="sec-title" id="t-viviendas" data-split>Cinco casas de campo de una planta, <em>de 168 a 270 m².</em></h2>
+      <h2 class="sec-title" id="t-viviendas" data-split>Cinco casas de campo, <em>de 168 a 270 m².</em></h2>
       <p class="sec-lead" data-reveal>Casas de campo de una planta, todas con 3 habitaciones y garaje doble. Elige la que se adapta a tu forma de vivir — o de rentar. La entrega contempla casa + lote; piscina, jacuzzi, kiosko y módulo de servicio son adicionales.</p>
     </header>
 
@@ -2106,7 +2108,7 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
   <div class="container">
     <header class="sec-head">
       <p class="sec-index mono"><span class="sec-num">07</span><span>El proyecto</span></p>
-      <h2 class="sec-title" id="t-proyecto" data-split>Hacienda Primavera: 61 casas de campo <em>en 5 etapas.</em></h2>
+      <h2 class="sec-title" id="t-proyecto" data-split>61 casas de campo <em>en 5 etapas.</em></h2>
       <p class="sec-lead" data-reveal>Un desarrollo campestre de 61 casas en el corazón del Eje Cafetero, donde la arquitectura contemporánea de PROA dialoga con el paisaje. Una portería imponente y elegante marca la entrada a un entorno de reserva natural.</p>
     </header>
     <div class="proj-grid">
@@ -2212,7 +2214,7 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
   <div class="container">
     <header class="sec-head">
       <p class="sec-index mono"><span class="sec-num">09</span><span>Galería</span></p>
-      <h2 class="sec-title" id="t-galeria" data-split>Galería de Hacienda Primavera: cada ángulo, <em>una postal.</em></h2>
+      <h2 class="sec-title" id="t-galeria" data-split>Galería: cada ángulo, <em>una postal.</em></h2>
     </header>
   </div>
   <div class="gal-track" tabindex="0" role="region" aria-label="Galería de imágenes. Desliza horizontalmente.">
@@ -2243,7 +2245,7 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
   <div class="container">
     <header class="sec-head">
       <p class="sec-index mono"><span class="sec-num">10</span><span>Preguntas frecuentes</span></p>
-      <h2 class="sec-title" id="t-faq" data-split>Preguntas frecuentes: lo que suelen <em>preguntarnos.</em></h2>
+      <h2 class="sec-title" id="t-faq" data-split>Preguntas <em>frecuentes.</em></h2>
     </header>
     <div class="faq-grid">
       <aside class="faq-aside" data-reveal>
@@ -2311,7 +2313,7 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
     <div class="tour-stage" id="tour360-stage" tabindex="-1">
       <div id="panorama-container" tabindex="-1" aria-label="Vista panorámica 360 grados de Hacienda Primavera"></div>
       <div class="tour-cover" id="tour360-cover">
-        <img class="tour-cover-bg" src="assets/hacienda-primavera-vista-norte.webp" srcset="assets/hacienda-primavera-vista-norte-480w.webp 480w, assets/hacienda-primavera-vista-norte-800w.webp 800w, assets/hacienda-primavera-vista-norte-1200w.webp 1200w, assets/hacienda-primavera-vista-norte-1600w.webp 1600w, assets/hacienda-primavera-vista-norte.webp 3840w" sizes="(max-width: 640px) 200vw, (max-width: 1023px) 92vw, 1320px" alt="" width="3840" height="1491" loading="lazy" decoding="async">
+        <img class="tour-cover-bg" src="assets/hacienda-primavera-vista-norte.webp" srcset="assets/hacienda-primavera-vista-norte-480w.webp 480w, assets/hacienda-primavera-vista-norte-800w.webp 800w, assets/hacienda-primavera-vista-norte-1200w.webp 1200w, assets/hacienda-primavera-vista-norte-1600w.webp 1600w, assets/hacienda-primavera-vista-norte.webp 3840w" sizes="(max-width: 640px) 200vw, (max-width: 1023px) 130vw, 1320px" alt="" width="3840" height="1491" loading="lazy" decoding="async">
         <svg class="tour-compass" viewBox="0 0 64 64" aria-hidden="true">
           <circle cx="32" cy="32" r="30" fill="none" stroke="currentColor" stroke-opacity=".55"/>
           <circle cx="32" cy="32" r="22" fill="none" stroke="currentColor" stroke-opacity=".35" stroke-dasharray="2 4"/>
@@ -2595,6 +2597,8 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
   } else {
     revealTargets.forEach(reveal);
   }
+  // El hero se revela al cargar sin esperar al observador (evita elementos invisibles en pantallas bajas)
+  $$('.hero [data-split], .hero [data-reveal]').forEach(reveal);
 
   // ─── Nav state, progress bar, parallax ───────────────
   const nav = $('#nav');
@@ -2638,7 +2642,7 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
   // ─── Mobile menu ─────────────────────────────────────
   const toggle = $('.nav-toggle');
   const menu = $('#menu');
-  const behindMenu = [$('#main'), $('.footer'), $('.wa-float')].filter(Boolean);
+  const behindMenu = [$('.skip'), $('#main'), $('.footer'), $('.wa-float')].filter(Boolean);
   const setMenu = (open) => {
     behindMenu.forEach((el) => { el.inert = open; });
     toggle.setAttribute('aria-expanded', String(open));
