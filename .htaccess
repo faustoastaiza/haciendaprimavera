@@ -2,9 +2,30 @@
 #   HACIENDA PRIMAVERA - Optimizacion Hostinger
 # ════════════════════════════════════════════
 
+# Redireccion 301 canonica: www -> dominio sin www
+# (http -> https NO se define aqui: el CDN de Hostinger ya lo hace y una
+#  regla basada en %{HTTPS} puede causar bucles de redireccion)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^www\.haciendaprimavera\.co$ [NC]
+  RewriteRule ^(.*)$ https://haciendaprimavera.co/$1 [R=301,L]
+
+  # Bloquear cualquier carpeta/archivo oculto (.git, .claude, .env...) salvo .well-known
+  RewriteRule (^|/)\.(?!well-known(/|$)) - [F,L]
+</IfModule>
+
+# Sin listado de directorios
+Options -Indexes
+
+# Pagina de error 404 propia (autocontenida, noindex)
+ErrorDocument 404 /404.html
+ErrorDocument 403 /404.html
+
 # Compresion GZIP / DEFLATE
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml application/xml application/xhtml+xml application/javascript application/x-javascript text/javascript application/json image/svg+xml font/ttf font/otf
+  # Webmanifest e iconos .ico
+  AddOutputFilterByType DEFLATE application/manifest+json image/x-icon
 </IfModule>
 
 # Cache del navegador (Expires)
@@ -33,6 +54,24 @@
 
   # Tour 360 - tiles JPG no cambian
   ExpiresByType application/xml               "access plus 1 month"
+
+  # Webmanifest - 1 semana
+  ExpiresByType application/manifest+json     "access plus 1 week"
+
+  # Favicon e iconos (URLs fijas, sin hash): 1 mes en vez de 1 anio
+  <FilesMatch "^(favicon.*|apple-touch-icon.*|android-chrome-.*|mstile-.*|icon-.*|safari-pinned-tab)\.(ico|png|svg)$">
+    ExpiresDefault                            "access plus 1 month"
+    ExpiresByType image/x-icon                "access plus 1 month"
+    ExpiresByType image/png                   "access plus 1 month"
+    ExpiresByType image/svg+xml               "access plus 1 month"
+  </FilesMatch>
+
+  # Archivos de descubrimiento (robots, sitemap, llms) - 1 dia
+  <FilesMatch "^(robots\.txt|sitemap\.xml|llms\.txt)$">
+    ExpiresDefault                            "access plus 1 day"
+    ExpiresByType text/plain                  "access plus 1 day"
+    ExpiresByType application/xml             "access plus 1 day"
+  </FilesMatch>
 </IfModule>
 
 # Cache-Control headers
@@ -40,16 +79,48 @@
   <FilesMatch "\.(webp|jpg|jpeg|png|gif|svg|woff2|woff|ttf|otf|ico)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
+  # Favicon e iconos: sobrescribe la regla anterior (1 mes, no immutable)
+  <FilesMatch "^(favicon.*|apple-touch-icon.*|android-chrome-.*|mstile-.*|icon-.*|safari-pinned-tab)\.(ico|png|svg)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+  # HTML corto para publicar cambios rapido
   <FilesMatch "\.html$">
     Header set Cache-Control "public, max-age=3600, must-revalidate"
   </FilesMatch>
+  # La pagina de error no se cachea
+  <FilesMatch "^404\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
 </IfModule>
 
-# MIME types correctos (Hostinger a veces falla con webp)
+# Cabeceras de seguridad (always: tambien en respuestas de error)
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+  Header always set Strict-Transport-Security "max-age=31536000"
+  Header always set X-Frame-Options "SAMEORIGIN"
+</IfModule>
+
+# MIME types correctos (Hostinger a veces falla con webp) y charset UTF-8
 <IfModule mod_mime.c>
+  AddDefaultCharset UTF-8
   AddType image/webp .webp
   AddType application/javascript .js
   AddType text/xml .xml
+  AddType application/manifest+json .webmanifest
+  AddType image/svg+xml .svg
+  AddType image/x-icon .ico
+
+  # robots.txt y llms.txt: texto plano en UTF-8
+  <FilesMatch "^(robots|llms)\.txt$">
+    ForceType "text/plain; charset=UTF-8"
+  </FilesMatch>
+
+  # sitemap.xml: application/xml (el resto de .xml, p. ej. tour 360, sigue como text/xml)
+  <FilesMatch "^sitemap\.xml$">
+    ForceType application/xml
+  </FilesMatch>
 </IfModule>
 
 # Bloquear acceso a archivos sensibles
@@ -57,7 +128,8 @@
   Require all denied
 </FilesMatch>
 
-# Forzar HTTPS (descomenta despues de confirmar SSL activo)
+# Forzar HTTPS: NO activar. Hostinger/CDN ya redirige http -> https y esta
+# regla puede causar bucles detras del CDN. Se deja solo como referencia.
 # RewriteEngine On
 # RewriteCond %{HTTPS} off
 # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
