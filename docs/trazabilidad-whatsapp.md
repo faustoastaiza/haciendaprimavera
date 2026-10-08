@@ -52,7 +52,8 @@ Al saltar a `#contacto`, la sección sube casi todo su relleno superior (`scroll
 
 - El `href` va **completo en el HTML** y funciona aunque el JavaScript falle.
 - Si la visita llega con UTM, el script le anexa el origen al mensaje: «Hola, estuve revisando la web de Hacienda Primavera y quiero más información **(fb · campaña · anuncio)**». Sin UTM el enlace queda idéntico. Los UTM se limpian (sin emojis cortados, caracteres de control ni `< > " ' \``, máx. 60 caracteres) y se guardan en la sesión.
-- La fila «WhatsApp» de los datos de contacto es solo texto. `tel:` y `mailto:` (sección de contacto y pie) no son WhatsApp y no se miden.
+- En la sección de contacto el botón va **solo** (no hay botón de llamada), grande y en el verde de WhatsApp (`#25D366`, texto oscuro para el contraste), en la columna derecha encima de la foto en escritorio y a todo el ancho arriba de los datos en móvil.
+- La fila «WhatsApp» de los datos de contacto es solo texto. `tel:` (pie de página) y `mailto:` (datos de contacto y pie) no son WhatsApp y no se miden.
 - Abrir el enlace con clic derecho o pulsación larga («abrir en pestaña nueva») no genera evento.
 
 ## 3. Eventos

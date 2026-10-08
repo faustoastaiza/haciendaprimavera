@@ -63,6 +63,8 @@
   --arcilla-soft: #E9A47E;
   --arcilla-lit: #D0663A;
   --salvia: #A7B59E;
+  --wa: #25D366;       /* verde de WhatsApp: solo el botón único de #contacto */
+  --wa-deep: #075E54;  /* verde oscuro de WhatsApp: relleno al pasar el cursor */
 
   --sans: 'Schibsted Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
@@ -233,6 +235,10 @@ strong, b { font-weight: 600; }
 .btn--ghost { --btn-border: var(--rule-2); }
 .btn--sm { min-height: 42px; padding: 10px 16px; font-size: .875rem; }
 .btn--block { width: 100%; }
+/* Botón único de WhatsApp: verde de la marca, texto oscuro (contraste 7,5:1; el blanco sobre este verde no pasa) */
+.btn--wa { --btn-bg: var(--wa); --btn-fg: #0B2E17; --btn-hover-bg: var(--wa-deep); --btn-hover-fg: #fff; }
+.btn--xl { min-height: 92px; padding: 24px clamp(20px, 2.4vw, 40px); gap: 16px; font-size: clamp(1.2rem, .85rem + .8vw, 1.6rem); letter-spacing: -.015em; white-space: nowrap; }
+.btn--xl .icon { font-size: 1.8em; }
 
 /* ── Navigation ──────────────────────────────── */
 .nav {
@@ -1235,13 +1241,13 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
 #contacto { scroll-margin-top: calc(24px - var(--sec-pad)); }
 .contact-grid {
   display: grid; grid-template-columns: repeat(12, minmax(0, 1fr));
-  column-gap: var(--col-gap); row-gap: 48px; align-items: start;
+  column-gap: var(--col-gap); row-gap: 32px; align-items: start;
 }
-.contact-body { grid-column: 1 / span 6; }
-.contact-figure { grid-column: 8 / -1; }
+/* Escritorio: a la derecha, el botón de WhatsApp (grande) y debajo la foto; a la izquierda, los datos de contacto */
+.contact-ctas { grid-column: 8 / -1; grid-row: 1; }
+.contact-info { grid-column: 1 / span 6; grid-row: 1 / span 2; border-top: 1px solid var(--rule); }
+.contact-figure { grid-column: 8 / -1; grid-row: 2; }
 .contact-figure .plate-media { aspect-ratio: 4 / 3; }
-.contact-ctas { display: flex; flex-wrap: wrap; gap: 12px; }
-.contact-info { margin-top: 44px; border-top: 1px solid var(--rule); }
 .contact-info > div { display: grid; grid-template-columns: minmax(110px, 170px) minmax(0, 1fr); gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--rule); }
 .contact-info dt { color: var(--fg-3); padding-top: 3px; }
 .contact-info dd { font-size: 1.05rem; }
@@ -1341,7 +1347,7 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
   .faq-aside, .faq-list { grid-column: 1 / -1; }
   .faq-aside { position: relative; top: auto; }
   .band-title, .band-side { grid-column: 1 / -1; }
-  .contact-body, .contact-figure { grid-column: 1 / -1; }
+  .contact-ctas, .contact-info, .contact-figure { grid-column: 1 / -1; grid-row: auto; }
   .footer-legal { grid-template-columns: 1fr; }
   .footer-cols { grid-template-columns: 1fr; }
 }
@@ -1409,6 +1415,7 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
   .ficha > div { grid-template-columns: 1fr; gap: 4px; }
 }
 @media (max-width: 640px) {
+  .btn--xl { min-height: 80px; padding: 20px 22px; gap: 14px; }
   .hero-status .sep, .hero-status .loc { display: none; }
   .lots-x span:nth-child(2), .lots-x span:nth-child(4), .lots-x span:nth-child(6) { display: none; }
   .brand-by { display: none; }
@@ -2445,18 +2452,15 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
       <p class="sec-lead" data-reveal>Escríbenos por WhatsApp desde cualquier país y resolvemos tus dudas sobre precios, disponibilidad, lotes y el modelo de rentas cortas.</p>
     </header>
     <div class="contact-grid">
-      <div class="contact-body">
-        <div class="contact-ctas">
-          <a class="btn btn--primary" href="https://wa.me/573178927252?text=Hola%2C%20estuve%20revisando%20la%20web%20de%20Hacienda%20Primavera%20y%20quiero%20m%C3%A1s%20informaci%C3%B3n" data-wa data-cta="final" target="_blank" rel="noopener"><svg class="icon icon--fill" aria-hidden="true"><use href="#i-wa"/></svg>Escribir por WhatsApp<span class="sr-only"> (se abre en una pestaña nueva)</span></a>
-          <a class="btn btn--ghost" href="tel:+573178927252"><svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg>Llamar a sala de ventas</a>
-        </div>
-        <dl class="contact-info" data-stagger>
-          <div data-reveal><dt class="mono">WhatsApp</dt><dd>+57 317 892 7252</dd></div>
-          <div data-reveal><dt class="mono">Correo</dt><dd><a href="mailto:comercial@proarquitectura.co">comercial@proarquitectura.co</a></dd></div>
-          <div data-reveal><dt class="mono">Sala de ventas</dt><dd>Carrera 6 # 1-75, Av. Centenario<br>Armenia / Quindío</dd></div>
-          <div data-reveal><dt class="mono">Desarrolla</dt><dd><a href="https://www.proarquitectura.co" target="_blank" rel="noopener">PROA · proarquitectura.co</a></dd></div>
-        </dl>
+      <div class="contact-ctas">
+        <a class="btn btn--wa btn--xl btn--block" href="https://wa.me/573178927252?text=Hola%2C%20estuve%20revisando%20la%20web%20de%20Hacienda%20Primavera%20y%20quiero%20m%C3%A1s%20informaci%C3%B3n" data-wa data-cta="final" target="_blank" rel="noopener"><svg class="icon icon--fill" aria-hidden="true"><use href="#i-wa"/></svg>Escribir por WhatsApp<span class="sr-only"> (se abre en una pestaña nueva)</span></a>
       </div>
+      <dl class="contact-info" data-stagger>
+        <div data-reveal><dt class="mono">WhatsApp</dt><dd>+57 317 892 7252</dd></div>
+        <div data-reveal><dt class="mono">Correo</dt><dd><a href="mailto:comercial@proarquitectura.co">comercial@proarquitectura.co</a></dd></div>
+        <div data-reveal><dt class="mono">Sala de ventas</dt><dd>Carrera 6 # 1-75, Av. Centenario<br>Armenia / Quindío</dd></div>
+        <div data-reveal><dt class="mono">Desarrolla</dt><dd><a href="https://www.proarquitectura.co" target="_blank" rel="noopener">PROA · proarquitectura.co</a></dd></div>
+      </dl>
       <figure class="plate contact-figure">
         <div class="plate-frame">
           <span class="crop crop--tl" aria-hidden="true"></span><span class="crop crop--tr" aria-hidden="true"></span><span class="crop crop--bl" aria-hidden="true"></span><span class="crop crop--br" aria-hidden="true"></span>
