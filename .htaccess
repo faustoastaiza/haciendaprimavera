@@ -83,12 +83,9 @@ ErrorDocument 403 /404.html
   <FilesMatch "^(favicon.*|apple-touch-icon.*|android-chrome-.*|mstile-.*|icon-.*|safari-pinned-tab)\.(ico|png|svg)$">
     Header set Cache-Control "public, max-age=2592000"
   </FilesMatch>
-  # HTML corto para publicar cambios rapido
+  # HTML: el navegador y el CDN lo revalidan siempre (respuesta 304 si no cambio), asi un cambio publicado se ve de inmediato
+  # y no hay que esperar a que venza una hora de cache. Las imagenes y los iconos siguen cacheados (reglas de arriba).
   <FilesMatch "\.html$">
-    Header set Cache-Control "public, max-age=3600, must-revalidate"
-  </FilesMatch>
-  # La pagina de error no se cachea
-  <FilesMatch "^404\.html$">
     Header set Cache-Control "no-cache"
   </FilesMatch>
 </IfModule>

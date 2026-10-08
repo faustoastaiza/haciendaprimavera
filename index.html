@@ -63,7 +63,6 @@
   --arcilla-soft: #E9A47E;
   --arcilla-lit: #D0663A;
   --salvia: #A7B59E;
-  --wa: #25D366;
 
   --sans: 'Schibsted Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
@@ -1231,6 +1230,9 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
 .lots-cta p + p { margin-top: 6px; color: var(--fg-2); }
 
 /* ── 13 Contacto ─────────────────────────────── */
+/* Al saltar desde cualquier ancla, se descuenta casi todo el relleno superior de la sección: así el botón
+   único de WhatsApp queda a la vista también en pantallas bajas. */
+#contacto { scroll-margin-top: calc(24px - var(--sec-pad)); }
 .contact-grid {
   display: grid; grid-template-columns: repeat(12, minmax(0, 1fr));
   column-gap: var(--col-gap); row-gap: 48px; align-items: start;
@@ -1270,21 +1272,27 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
 .footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; margin-top: 36px; color: var(--fg-3); }
 .footer-bottom a:hover { color: var(--accent); }
 
-/* ── WhatsApp flotante ───────────────────────── */
-.wa-float {
+/* ── Flotante de contacto: ancla al botón único de WhatsApp (#contacto) ── */
+.float-cta {
   position: fixed; right: 22px; bottom: 22px; z-index: 900;
   display: flex; align-items: center; height: 58px; padding: 0 17px;
-  border-radius: 100px; background: var(--wa); color: #0B2E17;
-  box-shadow: 0 10px 30px rgba(17, 26, 21, .28);
-  transition: transform .45s var(--ease), box-shadow .45s var(--ease);
+  border-radius: 100px; background: var(--arcilla-ink); color: #fff;
+  box-shadow: 0 0 0 2px var(--paper), 0 10px 30px rgba(17, 26, 21, .28);
+  transition: transform .45s var(--ease), box-shadow .45s var(--ease), background-color .45s var(--ease), opacity .35s var(--ease);
 }
-.wa-float .icon { font-size: 25px; }
-.wa-float-label {
+.float-cta .icon { font-size: 25px; }
+.float-cta-label {
   max-width: 0; overflow: hidden; white-space: nowrap; font-weight: 600; font-size: .92rem;
   transition: max-width .55s var(--ease), margin .55s var(--ease);
 }
-.wa-float:hover { transform: translateY(-3px); box-shadow: 0 16px 36px rgba(17, 26, 21, .32); }
-.wa-float:hover .wa-float-label, .wa-float:focus-visible .wa-float-label { max-width: 140px; margin-left: 10px; }
+.float-cta:hover { transform: translateY(-3px); background: var(--ink); box-shadow: 0 0 0 2px var(--paper), 0 16px 36px rgba(17, 26, 21, .32); }
+.float-cta:hover .float-cta-label, .float-cta:focus-visible .float-cta-label { max-width: 140px; margin-left: 10px; }
+.float-cta:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--paper), 0 0 0 5px var(--ink), 0 10px 30px rgba(17, 26, 21, .28); }
+@media (forced-colors: active) { .float-cta:focus-visible { outline: 2px solid CanvasText; outline-offset: 3px; } }
+.float-cta.is-hidden {
+  opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(14px);
+  transition: transform .35s var(--ease), opacity .35s var(--ease), visibility 0s linear .35s;
+}
 
 /* ── Lightbox ────────────────────────────────── */
 .lightbox {
@@ -1416,7 +1424,7 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
   .lb-prev { grid-column: 1; }
   .lb-next { grid-column: 2; }
   .lb-figure img { max-height: calc(100vh - 220px); }
-  .wa-float { right: 16px; bottom: 16px; }
+  .float-cta { right: 16px; bottom: 16px; }
   .tour-stage { aspect-ratio: 4 / 5; }
 }
 @media (max-width: 380px) {
@@ -1442,7 +1450,7 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
 }
 
 @media print {
-  .nav, .menu, .progress, .wa-float, .lightbox, .ticker { display: none !important; }
+  .nav, .menu, .progress, .float-cta, .lightbox, .ticker { display: none !important; }
 }
 </style>
 </head>
@@ -1453,6 +1461,7 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6"/></symbol>
   <symbol id="i-arrow-l" viewBox="0 0 24 24"><path d="M20 12H4M10 6l-6 6 6 6"/></symbol>
   <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M5 4.5h14a1.5 1.5 0 0 1 1.5 1.5v9a1.5 1.5 0 0 1-1.5 1.5h-7.2L7.5 20.2V16.5H5A1.5 1.5 0 0 1 3.5 15V6A1.5 1.5 0 0 1 5 4.5z"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M4.5 12.5l5 5L19.5 7"/></symbol>
   <symbol id="i-tap" viewBox="0 0 24 24"><path d="M9.5 9.5l10 4.1-4.3 1.3-1.4 4.4z"/><path d="M8 3v2.6M3 8h2.6M4.5 4.5l1.8 1.8M13 4.4l-1.6 1.6M4.4 13l1.6-1.6"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
@@ -1486,8 +1495,8 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
       <a href="#proyecto">Proyecto</a>
       <a href="#lotes">Lotes</a>
     </nav>
-    <a class="btn btn--primary btn--sm nav-cta" href="https://wa.me/573178927252?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20Hacienda%20Primavera." target="_blank" rel="noopener" aria-label="Asesoría por WhatsApp">
-      <svg class="icon icon--fill" aria-hidden="true"><use href="#i-wa"/></svg><span class="nav-cta-label">Asesoría</span>
+    <a class="btn btn--primary btn--sm nav-cta" href="#contacto" data-cta="nav" aria-label="Asesoría: hablar con un asesor">
+      <svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg><span class="nav-cta-label">Asesoría</span>
     </a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menú"><span></span><span></span></button>
   </div>
@@ -1504,10 +1513,10 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
       <li><a href="#ubicacion" style="--i:5"><span class="mono">08</span>Ubicación</a></li>
       <li><a href="#galeria" style="--i:6"><span class="mono">09</span>Galería</a></li>
       <li><a href="#lotes" style="--i:7"><span class="mono">12</span>Compra solo el lote</a></li>
-      <li><a href="#contacto" style="--i:8"><span class="mono">13</span>Contacto</a></li>
+      <li><a href="#contacto" data-cta="menu-contacto" style="--i:8"><span class="mono">13</span>Contacto</a></li>
     </ol>
-    <a class="btn btn--primary btn--block" href="https://wa.me/573178927252?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20Hacienda%20Primavera." target="_blank" rel="noopener">
-      <svg class="icon icon--fill" aria-hidden="true"><use href="#i-wa"/></svg>Asesoría por WhatsApp
+    <a class="btn btn--primary btn--block" href="#contacto" data-cta="menu">
+      <svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Hablar con un asesor
     </a>
     <p class="mono menu-foot">+57 317 892 7252 · Armenia / Quindío</p>
   </nav>
@@ -1542,8 +1551,8 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
       <h1 class="hero-title" id="hero-title" data-split style="--d:120ms">Vívela cuando quieras. <span class="hl">Réntala</span> cuando no estés.</h1>
       <p class="hero-lead" data-reveal style="--d:280ms"><strong>Hacienda Primavera:</strong> 61 casas de campo de una planta en el Eje Cafetero, con lotes de aprox. 2.000&nbsp;m² y <strong>modelo de rentas cortas</strong>. Una segunda vivienda para disfrutar y una inversión que puede generar ingresos mientras vives lejos.</p>
       <div class="hero-ctas" data-reveal style="--d:400ms">
-        <a class="btn btn--primary" href="https://wa.me/573178927252?text=Hola%2C%20me%20interesa%20invertir%20en%20Hacienda%20Primavera%20y%20conocer%20el%20modelo%20de%20rentas%20cortas." target="_blank" rel="noopener">
-          <svg class="icon icon--fill" aria-hidden="true"><use href="#i-wa"/></svg>Asesoría por WhatsApp
+        <a class="btn btn--primary" href="#contacto" data-cta="hero">
+          <svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Hablar con un asesor
         </a>
         <a class="btn btn--ghost" href="#inversion">Cómo funciona la inversión<svg class="icon arr" aria-hidden="true"><use href="#i-arrow"/></svg></a>
       </div>
@@ -1629,7 +1638,7 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
       </ul>
       <aside class="price-card is-dark" data-reveal aria-labelledby="price-title">
         <p class="price-label mono" id="price-title">Valor casa + lote</p>
-        <p class="price">$1.028.227.100<span class="price-cur mono">COP</span></p>
+        <p class="price" id="precio">$1.028.227.100<span class="price-cur mono">COP</span></p>
         <p class="price-sub">Facilidades de pago directo con la constructora.</p>
         <ul class="price-list">
           <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Casa de campo + lote de aprox. 2.000 m²</li>
@@ -1638,8 +1647,8 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
           <li class="is-extra"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Adicionales: piscina, jacuzzi, kiosko y módulo de servicio</li>
         </ul>
         <div class="price-ctas">
-          <a class="btn btn--primary btn--block" href="https://wa.me/573178927252?text=Hola%2C%20quiero%20conocer%20el%20plan%20de%20pagos%20de%20Hacienda%20Primavera%20%28casa%20%2B%20lote%29." target="_blank" rel="noopener">Solicitar plan de pagos<svg class="icon arr" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-          <a class="btn btn--ghost btn--block" href="https://wa.me/573178927252?text=Hola%2C%20quisiera%20agendar%20una%20visita%20a%20Hacienda%20Primavera." target="_blank" rel="noopener">Agendar visita al proyecto</a>
+          <a class="btn btn--primary btn--block" href="#contacto" data-cta="precio-plan">Solicitar plan de pagos<svg class="icon arr" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn--ghost btn--block" href="#contacto" data-cta="precio-visita">Agendar visita al proyecto</a>
         </div>
         <p class="price-note">* Valor de casa más lote. Piscina, jacuzzi, kiosko y módulo de servicio son adicionales. Precios sujetos a disponibilidad y etapa de comercialización.</p>
       </aside>
@@ -1715,8 +1724,8 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
       <li class="step" style="--i:4"><span class="step-node" aria-hidden="true"></span><span class="step-num mono">05</span><h3 class="step-t">Vívela o réntala</h3><p>Disfrútala en tus visitas y réntala el resto del año.</p></li>
     </ol>
     <div class="process-cta" data-reveal>
-      <a class="btn btn--primary" href="https://wa.me/573178927252?text=Hola%2C%20vivo%20fuera%20de%20Colombia%20y%20quiero%20conocer%20Hacienda%20Primavera." target="_blank" rel="noopener">
-        <svg class="icon icon--fill" aria-hidden="true"><use href="#i-wa"/></svg>Escríbenos desde cualquier país
+      <a class="btn btn--primary" href="#contacto" data-cta="exterior">
+        <svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Escríbenos desde cualquier país
       </a>
       <p class="mono">Atención por WhatsApp · +57 317 892 7252</p>
     </div>
@@ -1850,7 +1859,7 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
           </ul>
           <p class="spec-sub mono">Adicionales opcionales</p>
           <ul class="chips"><li>Jacuzzi</li><li>Piscina</li><li>Kiosko</li><li>Módulo de servicio</li></ul>
-          <a class="btn btn--primary" href="https://wa.me/573178927252?text=Hola%2C%20me%20interesa%20el%20modelo%20Tulip%C3%A1n%20%28168%20m%C2%B2%29%20de%20Hacienda%20Primavera." target="_blank" rel="noopener">Cotizar Tulipán<svg class="icon arr" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn--primary" href="#contacto" data-cta="modelo-tulipan">Cotizar Tulipán<svg class="icon arr" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         </div>
         <div class="typo-pager" role="group" aria-label="Cambiar de modelo">
           <span class="pager-slot"></span>
@@ -1899,7 +1908,7 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
           </ul>
           <p class="spec-sub mono">Adicionales opcionales</p>
           <ul class="chips"><li>Jacuzzi</li><li>Piscina</li><li>Kiosko</li><li>Módulo de servicio</li></ul>
-          <a class="btn btn--primary" href="https://wa.me/573178927252?text=Hola%2C%20me%20interesa%20el%20modelo%20Il%C3%A1n%20%28193%20m%C2%B2%29%20de%20Hacienda%20Primavera." target="_blank" rel="noopener">Cotizar Ilán<svg class="icon arr" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn--primary" href="#contacto" data-cta="modelo-ilan">Cotizar Ilán<svg class="icon arr" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         </div>
         <div class="typo-pager" role="group" aria-label="Cambiar de modelo">
           <button class="pager-btn pager-prev" type="button" data-go="tab-tulipan"><svg class="icon" aria-hidden="true"><use href="#i-arrow-l"/></svg><span class="pager-txt"><span class="pager-dir mono">Anterior</span><span class="pager-name">Tulipán</span></span></button>
@@ -1948,7 +1957,7 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
           </ul>
           <p class="spec-sub mono">Adicionales opcionales</p>
           <ul class="chips"><li>Jacuzzi</li><li>Piscina</li><li>Kiosko</li><li>Módulo de servicio</li></ul>
-          <a class="btn btn--primary" href="https://wa.me/573178927252?text=Hola%2C%20me%20interesa%20el%20modelo%20Array%C3%A1n%20%28230%20m%C2%B2%29%20de%20Hacienda%20Primavera." target="_blank" rel="noopener">Cotizar Arrayán<svg class="icon arr" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn--primary" href="#contacto" data-cta="modelo-arrayan">Cotizar Arrayán<svg class="icon arr" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         </div>
         <div class="typo-pager" role="group" aria-label="Cambiar de modelo">
           <button class="pager-btn pager-prev" type="button" data-go="tab-ilan"><svg class="icon" aria-hidden="true"><use href="#i-arrow-l"/></svg><span class="pager-txt"><span class="pager-dir mono">Anterior</span><span class="pager-name">Ilán</span></span></button>
@@ -1997,7 +2006,7 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
           </ul>
           <p class="spec-sub mono">Adicionales opcionales</p>
           <ul class="chips"><li>Jacuzzi</li><li>Piscina</li><li>Kiosko</li><li>Módulo de servicio</li></ul>
-          <a class="btn btn--primary" href="https://wa.me/573178927252?text=Hola%2C%20me%20interesa%20el%20modelo%20Urap%C3%A1n%20%28254%20m%C2%B2%29%20de%20Hacienda%20Primavera." target="_blank" rel="noopener">Cotizar Urapán<svg class="icon arr" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn--primary" href="#contacto" data-cta="modelo-urapan">Cotizar Urapán<svg class="icon arr" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         </div>
         <div class="typo-pager" role="group" aria-label="Cambiar de modelo">
           <button class="pager-btn pager-prev" type="button" data-go="tab-arrayan"><svg class="icon" aria-hidden="true"><use href="#i-arrow-l"/></svg><span class="pager-txt"><span class="pager-dir mono">Anterior</span><span class="pager-name">Arrayán</span></span></button>
@@ -2046,7 +2055,7 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
           </ul>
           <p class="spec-sub mono">Adicionales opcionales</p>
           <ul class="chips"><li>Jacuzzi</li><li>Piscina</li><li>Kiosko</li><li>Módulo de servicio</li></ul>
-          <a class="btn btn--primary" href="https://wa.me/573178927252?text=Hola%2C%20me%20interesa%20el%20modelo%20Sam%C3%A1n%20%28270%20m%C2%B2%29%20de%20Hacienda%20Primavera." target="_blank" rel="noopener">Cotizar Samán<svg class="icon arr" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn--primary" href="#contacto" data-cta="modelo-saman">Cotizar Samán<svg class="icon arr" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         </div>
         <div class="typo-pager" role="group" aria-label="Cambiar de modelo">
           <button class="pager-btn pager-prev" type="button" data-go="tab-urapan"><svg class="icon" aria-hidden="true"><use href="#i-arrow-l"/></svg><span class="pager-txt"><span class="pager-dir mono">Anterior</span><span class="pager-name">Urapán</span></span></button>
@@ -2265,7 +2274,7 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
     <div class="faq-grid">
       <aside class="faq-aside" data-reveal>
         <p>¿Tienes otra pregunta? Escríbenos y te respondemos por WhatsApp.</p>
-        <a class="btn btn--ghost" href="https://wa.me/573178927252?text=Hola%2C%20tengo%20una%20pregunta%20sobre%20Hacienda%20Primavera." target="_blank" rel="noopener"><svg class="icon icon--fill" aria-hidden="true"><use href="#i-wa"/></svg>Preguntar por WhatsApp</a>
+        <a class="btn btn--ghost" href="#contacto" data-cta="preguntas"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Hacer otra pregunta</a>
       </aside>
       <div class="faq-list">
         <div class="faq-item">
@@ -2422,7 +2431,7 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
         <p class="lots-cta-t">¿Quieres elegir tu lote?</p>
         <p>Solicita por WhatsApp el plano de lotes disponibles.</p>
       </div>
-      <a class="btn btn--primary" href="https://wa.me/573178927252?text=Hola%2C%20me%20interesa%20comprar%20un%20lote%20en%20Hacienda%20Primavera%20para%20construir%20mi%20casa." target="_blank" rel="noopener"><svg class="icon icon--fill" aria-hidden="true"><use href="#i-wa"/></svg>Consultar lotes disponibles</a>
+      <a class="btn btn--primary" href="#contacto" data-cta="lotes"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Consultar lotes disponibles</a>
     </div>
   </div>
 </section>
@@ -2437,12 +2446,12 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
     </header>
     <div class="contact-grid">
       <div class="contact-body">
-        <div class="contact-ctas" data-reveal>
-          <a class="btn btn--primary" href="https://wa.me/573178927252?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20Hacienda%20Primavera." target="_blank" rel="noopener"><svg class="icon icon--fill" aria-hidden="true"><use href="#i-wa"/></svg>Escribir por WhatsApp</a>
+        <div class="contact-ctas">
+          <a class="btn btn--primary" href="https://wa.me/573178927252?text=Hola%2C%20estuve%20revisando%20la%20web%20de%20Hacienda%20Primavera%20y%20quiero%20m%C3%A1s%20informaci%C3%B3n" data-wa data-cta="final" target="_blank" rel="noopener"><svg class="icon icon--fill" aria-hidden="true"><use href="#i-wa"/></svg>Escribir por WhatsApp<span class="sr-only"> (se abre en una pestaña nueva)</span></a>
           <a class="btn btn--ghost" href="tel:+573178927252"><svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg>Llamar a sala de ventas</a>
         </div>
         <dl class="contact-info" data-stagger>
-          <div data-reveal><dt class="mono">WhatsApp</dt><dd><a href="https://wa.me/573178927252?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20Hacienda%20Primavera." target="_blank" rel="noopener">+57 317 892 7252</a></dd></div>
+          <div data-reveal><dt class="mono">WhatsApp</dt><dd>+57 317 892 7252</dd></div>
           <div data-reveal><dt class="mono">Correo</dt><dd><a href="mailto:comercial@proarquitectura.co">comercial@proarquitectura.co</a></dd></div>
           <div data-reveal><dt class="mono">Sala de ventas</dt><dd>Carrera 6 # 1-75, Av. Centenario<br>Armenia / Quindío</dd></div>
           <div data-reveal><dt class="mono">Desarrolla</dt><dd><a href="https://www.proarquitectura.co" target="_blank" rel="noopener">PROA · proarquitectura.co</a></dd></div>
@@ -2480,7 +2489,7 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
       <a href="#preguntas">Preguntas frecuentes</a>
       <a href="#tour360">Tour 360°</a>
       <a href="#lotes">Lotes</a>
-      <a href="#contacto">Contacto</a>
+      <a href="#contacto" data-cta="footer">Contacto</a>
     </nav>
     <div class="footer-cols">
       <div class="footer-col">
@@ -2511,8 +2520,8 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
   </div>
 </footer>
 
-<a class="wa-float" href="https://wa.me/573178927252?text=Hola%2C%20quiero%20conocer%20m%C3%A1s%20sobre%20Hacienda%20Primavera." target="_blank" rel="noopener" aria-label="Escribir por WhatsApp">
-  <svg class="icon icon--fill" aria-hidden="true"><use href="#i-wa"/></svg><span class="wa-float-label">¿Hablamos?</span>
+<a class="float-cta" href="#contacto" data-cta="flotante" aria-label="¿Hablamos? Hablar con un asesor">
+  <svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg><span class="float-cta-label">¿Hablamos?</span>
 </a>
 
 <div class="lightbox" role="dialog" aria-modal="true" aria-label="Visor de imágenes" aria-hidden="true">
@@ -2677,7 +2686,7 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
   // ─── Mobile menu ─────────────────────────────────────
   const toggle = $('.nav-toggle');
   const menu = $('#menu');
-  const behindMenu = [$('.skip'), $('#main'), $('.footer'), $('.wa-float')].filter(Boolean);
+  const behindMenu = [$('.skip'), $('#main'), $('.footer'), $('.float-cta')].filter(Boolean);
   const setMenu = (open) => {
     behindMenu.forEach((el) => { el.inert = open; });
     toggle.setAttribute('aria-expanded', String(open));
@@ -2688,7 +2697,20 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
   };
   toggle.addEventListener('click', () => setMenu(toggle.getAttribute('aria-expanded') !== 'true'));
   menu.addEventListener('click', (e) => { if (e.target.closest('a')) setMenu(false); });
+  // El logo y el CTA de la cabecera quedan por encima del menú abierto: sus anclas también deben cerrarlo
+  document.addEventListener('click', (e) => { if (menu.classList.contains('is-open') && e.target.closest('a[href^="#"]')) setMenu(false); });
   window.addEventListener('resize', () => { if (window.innerWidth > 1023 && menu.classList.contains('is-open')) setMenu(false); });
+
+  // ─── Flotante de contacto: se oculta cuando el contacto (o el pie) ya está a la vista ───
+  const floatCta = $('.float-cta');
+  if (floatCta && 'IntersectionObserver' in window) {
+    const seen = new Set();
+    const fio = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) seen.add(e.target); else seen.delete(e.target); });
+      floatCta.classList.toggle('is-hidden', seen.size > 0);
+    }, { rootMargin: '0px 0px -15% 0px' });
+    [$('#contacto'), $('.footer')].filter(Boolean).forEach((el) => fio.observe(el));
+  }
 
   // ─── Annual ring (renta corta) ───────────────────────
   const year = $('.year');
@@ -3083,6 +3105,191 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
       }
     });
   }
+})();
+</script>
+
+<!-- ═══ TRAZABILIDAD WHATSAPP ═══
+     Un solo punto de conversión: el botón a[data-wa] de #contacto (sección 13).
+     Todo lo demás son anclas a #contacto, cada una con un data-cta único.
+     Mapa de botones y verificación: docs/trazabilidad-whatsapp.md · tools/check_trazabilidad.py -->
+<script>
+(() => {
+  'use strict';
+
+  /* ── CONFIG ─────────────────────────────────── */
+  const CONFIG = {
+    proyecto: 'hacienda-primavera',
+    contentName: 'Hacienda Primavera',
+    // ID del píxel de Meta de ESTE proyecto (solo dígitos). Vacío = no se instala desde aquí.
+    // Déjalo vacío si el píxel lo instala GTM: un mismo ID nunca va en los dos sitios.
+    pixelId: '',
+    destino: '#contacto',   // sección con el botón único de WhatsApp
+    precio: '#precio',      // bloque de precio que mide VioPrecio
+    // Calidad del lead: umbrales iniciales, para ajustar con datos reales
+    alta: { profundidad: 40, segundos: 60 },
+    media: { profundidad: 20, segundos: 20 },
+  };
+
+  const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+  const store = {
+    get(k) { try { return window.sessionStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { try { window.sessionStorage.setItem(k, v); } catch (e) { /* modo privado o bloqueado */ } },
+  };
+  // Texto seguro para la URL y el evento: sin caracteres de control ni < > " ' `, máx. 60 caracteres. Se recorta por
+  // caracteres y se descartan los sustitutos sueltos: un emoji partido haría lanzar a encodeURIComponent.
+  const clean = (v) => Array.from(String(v == null ? '' : v).replace(/[\u0000-\u001f\u007f<>"'`]/g, '').replace(/\s+/g, ' ').trim())
+    .filter((ch) => !/^[\uD800-\uDFFF]$/.test(ch))
+    .slice(0, 60)
+    .join('')
+    .trim();
+
+  /* ── Píxel de Meta (solo si hay ID y nadie más lo instaló) ── */
+  if (CONFIG.pixelId && typeof window.fbq !== 'function') {
+    const n = (window.fbq = function () { if (n.callMethod) n.callMethod.apply(n, arguments); else n.queue.push(arguments); });
+    if (!window._fbq) window._fbq = n;
+    n.push = n;
+    n.loaded = true;
+    n.version = '2.0';
+    n.queue = [];
+    // Los saltos por ancla (#contacto, #renta…) cambian el historial y el píxel, por defecto, suma un PageView extra por cada
+    // cambio de hash. Con esto solo cuenta la carga real. Tiene que ir ANTES del init: puesto después ya no hace efecto.
+    n.disablePushState = true;
+    const tag = document.createElement('script');
+    tag.async = true;
+    tag.src = 'https://connect.facebook.net/en_US/fbevents.js';
+    document.head.appendChild(tag);
+    n('init', CONFIG.pixelId);
+    n('track', 'PageView');
+  }
+
+  /* ── Envío: píxel (si existe) + dataLayer (para GTM/GA4) ── */
+  const dl = (window.dataLayer = window.dataLayer || []);
+  const send = (fbEvent, dlEvent, data) => {
+    const payload = Object.assign({ proyecto: CONFIG.proyecto }, data);
+    try { if (typeof window.fbq === 'function') window.fbq('trackCustom', fbEvent, payload); } catch (e) { /* el píxel nunca debe romper la página */ }
+    try { dl.push(Object.assign({ event: dlEvent }, payload)); } catch (e) { /* idem */ }
+  };
+
+  /* ── Origen del tráfico (UTM) ── */
+  const UTM = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+  const getUtms = () => {
+    const out = {};
+    try {
+      const q = new URLSearchParams(window.location.search);
+      UTM.forEach((k) => { const v = clean(q.get(k)); if (v) out[k] = v; });
+    } catch (e) { /* sin URLSearchParams */ }
+    if (Object.keys(out).length) { store.set('hp_utm', JSON.stringify(out)); return out; }
+    try {
+      const saved = JSON.parse(store.get('hp_utm') || '{}') || {};
+      UTM.forEach((k) => { const v = clean(saved[k]); if (v) out[k] = v; });
+    } catch (e) { /* valor guardado ilegible */ }
+    return out;
+  };
+  const utms = getUtms();
+  const origen = [utms.utm_source, utms.utm_campaign, utms.utm_content].filter(Boolean).join(' · ');
+  const utmTags = {};
+  ['utm_source', 'utm_campaign', 'utm_content'].forEach((k) => { if (utms[k]) utmTags[k] = utms[k]; });
+
+  /* El href completo vive en el HTML; aquí solo se le anexa "(fuente · campaña · anuncio)" al texto del mensaje.
+     Sin UTM no cambia nada. Se reescribe solo el parámetro text (los demás se conservan) y, si algo falla, queda el href del HTML. */
+  const paintHref = (a) => {
+    try {
+      const href = a.getAttribute('href') || '';
+      if (a.dataset.waText === undefined) {
+        const m = href.match(/[?&]text=([^&#]*)/);
+        a.dataset.waText = m ? decodeURIComponent(m[1].replace(/\+/g, ' ')) : '';
+      }
+      if (!a.dataset.waText || !origen) return;
+      const text = encodeURIComponent(a.dataset.waText + ' (' + origen + ')');
+      a.setAttribute('href', href.replace(/([?&]text=)[^&#]*/, (all, pre) => pre + text));
+    } catch (e) { /* queda el href original del HTML */ }
+  };
+  const waLinks = $$('a[data-wa]');
+
+  /* ── Calidad del lead: tiempo activo + lectura real ──
+     "Leída" = la sección estuvo 1,5 s en la franja central de la pantalla. Un salto por ancla
+     pasa volando y no cuenta, así que la profundidad no se infla porque el contacto está al final. */
+  let activeMs = 0;
+  let since = document.visibilityState === 'hidden' ? null : 0;   // performance.now() cuenta desde que empezó la navegación
+  document.addEventListener('visibilitychange', () => {
+    const t = window.performance.now();
+    if (document.visibilityState === 'hidden') { if (since !== null) { activeMs += t - since; since = null; } }
+    else if (since === null) since = t;
+  });
+  const segundos = () => Math.round((activeMs + (since === null ? 0 : window.performance.now() - since)) / 1000);
+
+  const watch = (el, opts, onSeen) => {
+    if (!el || !('IntersectionObserver' in window)) return;
+    let timer = null;
+    const io = new IntersectionObserver((entries) => {
+      const e = entries[entries.length - 1];
+      const on = opts.full ? e.intersectionRatio >= 0.98 : e.isIntersecting;
+      if (on) {
+        if (!timer) timer = window.setTimeout(() => { io.disconnect(); onSeen(); }, opts.ms);
+      } else if (timer) {
+        window.clearTimeout(timer);
+        timer = null;
+      }
+    }, { rootMargin: opts.margin, threshold: opts.full ? [0, 0.98, 1] : 0 });
+    io.observe(el);
+  };
+
+  const leidas = new Set();
+  const secciones = $$('main section[id]').filter((el) => el.id !== 'inicio' && '#' + el.id !== CONFIG.destino);
+  secciones.forEach((el) => watch(el, { ms: 1500, margin: '-40% 0px -40% 0px' }, () => leidas.add(el.id)));
+  const profundidad = () => (secciones.length ? Math.round(100 * leidas.size / secciones.length) : 0);
+
+  const calidad = (p, s, v) => {
+    if (v && p >= CONFIG.alta.profundidad && s >= CONFIG.alta.segundos) return 'alta';
+    if ((v || p >= CONFIG.media.profundidad) && s >= CONFIG.media.segundos) return 'media';
+    return 'baja';
+  };
+
+  /* ── VioPrecio: el precio, entero y quieto 1 s en pantalla (una vez por sesión) ── */
+  let vioPrecio = store.get('hp_vio_precio') === '1';
+  if (!vioPrecio) {
+    watch(document.querySelector(CONFIG.precio), { ms: 1000, margin: '-72px 0px 0px 0px', full: true }, () => {
+      vioPrecio = true;
+      store.set('hp_vio_precio', '1');
+      send('VioPrecio', 'vio_precio', {});
+    });
+  }
+
+  /* ── ClicIntencionPrecio: cualquier ancla al contacto (señal, no optimiza) ── */
+  $$('a[href="' + CONFIG.destino + '"]').forEach((a) => {
+    a.addEventListener('click', () => {
+      send('ClicIntencionPrecio', 'cta_precio_click', { seccion: a.dataset.cta || clean(a.textContent), texto: clean(a.textContent) });
+    });
+  });
+
+  /* ── ContactoWhatsApp: LA conversión (el único botón que abre WhatsApp) ── */
+  let ultimo = 0;
+  let clics = Number(store.get('hp_wa_clics')) || 0;
+  const contacto = (a) => {
+    paintHref(a);
+    const ahora = Date.now();
+    if (ahora - ultimo < 2000) return;   // doble clic o doble toque: un solo evento
+    ultimo = ahora;
+    clics += 1;
+    store.set('hp_wa_clics', String(clics));
+    const p = profundidad();
+    const s = segundos();
+    send('ContactoWhatsApp', 'contacto_whatsapp', Object.assign({
+      boton: a.dataset.cta || 'final',
+      content_name: CONFIG.contentName,
+      vio_precio: vioPrecio,
+      profundidad: p,
+      segundos_en_pagina: s,
+      calidad: calidad(p, s, vioPrecio),
+      clic_n: clics,            // nº de clics en WhatsApp de esta sesión
+      repetido: clics > 1,      // para contar personas y no clics, excluir repetido = true en la conversión personalizada
+    }, utmTags));
+  };
+  waLinks.forEach((a) => {
+    a.addEventListener('click', () => contacto(a));
+    a.addEventListener('auxclick', (e) => { if (e.button === 1) contacto(a); });
+  });
+  waLinks.forEach(paintHref);   // al final: si algo fallara antes, los listeners ya están registrados
 })();
 </script>
 

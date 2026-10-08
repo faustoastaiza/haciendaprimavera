@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """Arma la carpeta _publicar/ (lista para subir a public_html) y el ZIP.
-Uso (desde la carpeta del proyecto): python3 tools/build_publicar.py [--no-minify]
+Uso (desde la carpeta del proyecto): python3 tools/build_publicar.py [--no-minify] [--require-pixel]
 - Copia solo lo que el sitio necesita (sin .git, .claude, .command, .DS_Store...).
 - Minifica index.html de forma conservadora SOLO en la copia de _publicar (el fuente no se toca).
 - Verifica que cada referencia local exista; excluye del paquete lo que nadie referencia.
+- Antes de empaquetar comprueba el contrato del botón único de WhatsApp (tools/check_trazabilidad.py); si se rompe, aborta.
+  Con --require-pixel también aborta si CONFIG.pixelId está vacío (úsalo para el paquete de producción con píxel).
 """
-import os, re, sys, shutil, zipfile, json
+import os, re, sys, shutil, zipfile, json, subprocess
 from urllib.parse import unquote
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -61,7 +63,28 @@ def minify_html(html):
     return ''.join(res).lstrip()
 
 
+def check_contract():
+    """Un solo botón de WhatsApp (#contacto) y todo lo demás, anclas con data-cta único. Si se rompe, no se empaqueta.
+    Devuelve True si falta el ID del píxel (el paquete saldría sin medir nada en Meta)."""
+    args = [sys.executable, os.path.join(ROOT, 'tools', 'check_trazabilidad.py'), os.path.join(ROOT, 'index.html')]
+    if '--require-pixel' in sys.argv:
+        args.append('--require-pixel')
+    r = subprocess.run(args, capture_output=True, text=True)
+    lines = [l for l in r.stdout.splitlines() if l.strip()]
+    print('trazabilidad:', lines[-1] if lines else '(sin salida)')
+    for l in lines:
+        if l.startswith('AVISO') or l.strip().startswith('\u2717'):
+            print('  ' + l)
+    if r.returncode != 0:
+        fallos = [l for l in lines if l.strip().startswith('\u2717')]
+        if fallos and all('pixelId' in l for l in fallos):
+            sys.exit('Falta el ID del píxel de Meta: pégalo en CONFIG.pixelId de index.html (o quita --require-pixel si el píxel lo instala GTM).')
+        sys.exit('Contrato del botón único de WhatsApp roto: corrige index.html (python3 tools/check_trazabilidad.py)')
+    return any(l.startswith('AVISO') and 'pixelId' in l for l in lines)
+
+
 def main():
+    pixel_missing = check_contract()
     if os.path.exists(OUT):
         shutil.rmtree(OUT)
     os.makedirs(OUT)
@@ -123,6 +146,9 @@ def main():
                 z.write(full, os.path.relpath(full, OUT))
     total = sum(os.path.getsize(os.path.join(b, f)) for b, _, fs in os.walk(OUT) for f in fs)
     print(f'\n_publicar: {len(copied)} archivos, {total/1e6:.1f} MB | ZIP: {os.path.getsize(ZIP)/1e6:.1f} MB -> {ZIP}')
+    if pixel_missing:
+        print('\n*** OJO: este paquete NO instala el píxel de Meta (CONFIG.pixelId vacío en index.html). ***')
+        print('    Los eventos de WhatsApp no llegan a Meta hasta poner el ID (o instalar el píxel con GTM).')
     if missing: sys.exit(2)
 
 
