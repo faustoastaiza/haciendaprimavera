@@ -1,6 +1,6 @@
 # Hacienda Primavera
 
-> Hacienda Primavera es un conjunto cerrado de 61 casas de campo de una planta, sobre lotes de aprox. 2.000 m², en el Eje Cafetero de Colombia. Se desarrolla en 5 etapas (la Etapa 1 está en construcción) y ofrece 5 tipologías de 168,15 a 270,20 m² construidos. Incluye un modelo de rentas cortas sujeto al reglamento del proyecto y a la normativa vigente, sin promesa de rentabilidad ni de ocupación. La compra cuenta con respaldo de fiducia. Lo desarrolla PROA (Proarquitectura).
+> Hacienda Primavera es un conjunto cerrado de 61 casas de campo de una planta, sobre lotes de aprox. 2.000 m², en el Eje Cafetero de Colombia. Se desarrolla en 5 etapas (la Etapa 1 está en construcción) y ofrece 5 tipologías de 168,15 a 270,20 m² construidos. Incluye un modelo de rentas cortas sujeto al reglamento del proyecto y a la normativa vigente, sin promesa de rentabilidad ni de ocupación. Lo desarrolla PROA (Proarquitectura).
 
 Notas para lectores automáticos:
 
@@ -10,13 +10,13 @@ Notas para lectores automáticos:
 
 ## Secciones principales
 
-- [La inversión](https://haciendaprimavera.co/#inversion): la casa de campo como segunda vivienda y como activo; la compra incluye casa más lote; piscina, jacuzzi, kiosko y módulo de servicio son adicionales; compra con respaldo de fiducia.
+- [La inversión](https://haciendaprimavera.co/#inversion): la casa de campo como segunda vivienda y como activo; la compra incluye casa más lote; piscina, jacuzzi, kiosko y módulo de servicio son adicionales.
 - [Renta corta](https://haciendaprimavera.co/#renta): modelo de rentas cortas y tres escenarios de uso (vívela, combínala, réntala), con un diagrama ilustrativo de uso anual que no constituye proyección de ocupación ni de rentabilidad.
 - [Desde el exterior](https://haciendaprimavera.co/#exterior): cómo conocer y comprar viviendo fuera de Colombia, en cinco pasos, con asesoría por WhatsApp.
 - [Viviendas](https://haciendaprimavera.co/#viviendas): las 5 tipologías, con renders isométricos, plantas, planos y ficha técnica.
 - [El proyecto](https://haciendaprimavera.co/#proyecto): ficha técnica del desarrollo (61 casas, 5 etapas, seguridad, cerramiento, vías, servicios y zonas comunes).
 - [Ubicación](https://haciendaprimavera.co/#ubicacion): Eje Cafetero, Paisaje Cultural Cafetero (Patrimonio de la Humanidad, UNESCO), aeropuerto a 35 minutos, clima de 18 a 26 °C.
-- [Lotes](https://haciendaprimavera.co/#lotes): opción de comprar solo el lote de aprox. 2.000 m² y construir; según el plano general, los 61 lotes van de 2.002,96 a 2.632,16 m² (sujeto a verificación con el cuadro de áreas oficial). PROA ofrece opcionalmente diseño y construcción.
+- [Lotes](https://haciendaprimavera.co/#lotes): opción de comprar solo el lote de aprox. 2.000 m² y construir; según el plano general, los 61 lotes van de 2.002,96 a 2.632,16 m² (sujeto a verificación con el cuadro de áreas oficial). La construcción está sujeta al Reglamento de Propiedad Horizontal (RPH) para conservar la estética del conjunto; aplican condiciones y restricciones. PROA ofrece opcionalmente diseño y construcción.
 - [Preguntas frecuentes](https://haciendaprimavera.co/#preguntas): ocho preguntas con respuesta directa sobre renta corta, compra desde el exterior, qué incluye la compra, etapas, tipologías, lotes, ubicación y desarrollador.
 - [Contacto](https://haciendaprimavera.co/#contacto): WhatsApp, correo y sala de ventas.
 
@@ -39,9 +39,9 @@ Todas son de una planta, con 3 habitaciones y garaje doble, en un lote de aprox.
 
 ## Contacto
 
-- WhatsApp y teléfono: +57 317 892 7252 (https://wa.me/573178927252)
-- Correo: info@haciendaprimavera.co
-- Sala de ventas: Cra. 6ta #1-75, Avenida Centenario, Armenia, Quindío
+- WhatsApp y teléfono de la sala de ventas (comercial): +57 317 892 7252 (https://wa.me/573178927252)
+- Correo: comercial@proarquitectura.co
+- Sala de ventas: Carrera 6 # 1-75, Av. Centenario, Armenia / Quindío
 
 ## Desarrollador
 

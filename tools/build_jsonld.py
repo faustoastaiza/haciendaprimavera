@@ -499,7 +499,7 @@ def build_graph(doc, warns):
     if has_agent:
         addr = {"@type": "PostalAddress", "streetAddress": lines[0]}
         if len(lines) > 1:
-            loc = [norm(x) for x in lines[1].split(",")]
+            loc = [norm(x) for x in re.split(r"[,/]", lines[1]) if norm(x)]
             addr["addressLocality"] = loc[0]
             if len(loc) > 1:
                 addr["addressRegion"] = ", ".join(loc[1:])
