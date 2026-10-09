@@ -84,7 +84,7 @@ Falta el ID del píxel de Hacienda Primavera. Hasta que se ponga, **nada llega a
 - **Un mismo ID nunca va en los dos sitios**: provoca «Duplicate Pixel ID» y `PageView` de más. Si ya hay un `fbq` en la página, el código no instala otro.
 - Para el paquete de producción: `python3 tools/build_publicar.py --require-pixel` se detiene si `pixelId` está vacío. Sin el flag solo avisa al final.
 
-Después de publicar: dispara `ContactoWhatsApp` una vez en producción y crea en Events Manager la conversión personalizada (ver la regla en §3). Esa es la que optimiza la campaña. Si Events Manager lo pide, verifica el dominio `haciendaprimavera.co` en Business Manager.
+Después de publicar: dispara `ContactoWhatsApp` una vez en producción y crea en Events Manager la conversión personalizada (ver la regla en §3). Esa es la que optimiza la campaña. La **verificación de dominio de Meta** ya está instalada: la etiqueta `facebook-domain-verification` está en el `<head>` de `index.html` (no la borres). Se verifica en Business Manager → Configuración del negocio → Seguridad de la marca → Dominios → `haciendaprimavera.co` → Verificar.
 
 ## 6. Verificación en 5 minutos
 
