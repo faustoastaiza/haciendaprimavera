@@ -107,26 +107,51 @@ function rutas_secreto()
     return $r;
 }
 
+// Lee el archivo secreto SIN dejar que escriba nada en la respuesta. Si el archivo no empieza con <?php, PHP lo imprimiría tal cual
+// (con el token adentro) en la respuesta pública: por eso toda su salida se descarta.
+function leer_secreto($ruta)
+{
+    $x = null;
+    $estado = 'ok';
+    ob_start();
+    try {
+        $x = include $ruta;
+    } catch (Throwable $e) {
+        $estado = 'error de sintaxis';
+    }
+    $sobra = ob_get_clean();
+    if ($estado === 'ok') {
+        if (!is_array($x)) {
+            $estado = $sobra !== '' && $sobra !== false ? 'no empieza con <?php' : 'no devuelve una lista (falta «return [ … ];»)';
+        } elseif (empty($x['pixel_id']) || empty($x['access_token'])) {
+            $estado = 'faltan pixel_id o access_token';
+        }
+    }
+    return [$estado === 'ok' ? $x : null, $estado];
+}
+
 function cargar_config()
 {
     $cfg = [];
     $donde = '';
+    $buscado = [];
     foreach (rutas_secreto() as $ruta => $etiqueta) {
+        $estado = 'no existe';
         if (is_file($ruta)) {
-            try {
-                $x = include $ruta;
-            } catch (Throwable $e) {   // archivo secreto con un error de sintaxis: se trata como «sin configurar»
-                error_log('[meta-capi] el archivo secreto no se pudo leer: ' . get_class($e));
-                $x = null;
-            }
-            if (is_array($x)) {
-                $cfg = $x;
-                $donde = $etiqueta;
-                break;
+            if (!is_readable($ruta)) {
+                $estado = 'existe, pero PHP no puede leerlo (permisos)';
+            } else {
+                list($x, $estado) = leer_secreto($ruta);
+                if ($x !== null && $donde === '') {
+                    $cfg = $x;
+                    $donde = $etiqueta;
+                }
             }
         }
+        $buscado[] = ['donde' => $etiqueta, 'estado' => $estado];
     }
     $cfg['__ubicacion'] = $donde;
+    $cfg['__buscado'] = $buscado;
     foreach (['pixel_id' => 'META_PIXEL_ID', 'access_token' => 'META_ACCESS_TOKEN', 'test_event_code' => 'META_TEST_EVENT_CODE',
         'graph_version' => 'META_GRAPH_VERSION', 'graph_base' => 'META_GRAPH_BASE', 'allowed_hosts' => 'META_ALLOWED_HOSTS'] as $k => $e) {
         $v = getenv($e);
@@ -135,6 +160,27 @@ function cargar_config()
         }
     }
     return $cfg;
+}
+
+// Archivos de las carpetas donde se busca cuyo nombre se parece a «capi…» (por ejemplo «capi-secret.php.txt» o «capi-secret (1).php»):
+// ayuda a encontrar un archivo mal nombrado. Solo nombres, nunca contenido.
+function nombres_parecidos()
+{
+    $out = [];
+    $vistas = [];
+    foreach (rutas_secreto() as $ruta => $etiqueta) {
+        $carpeta = dirname($ruta);
+        if (isset($vistas[$carpeta])) {
+            continue;
+        }
+        $vistas[$carpeta] = true;
+        foreach ((array) @scandir($carpeta) as $nombre) {
+            if (is_string($nombre) && preg_match('/^\.?capi/i', $nombre) && basename($ruta) !== $nombre && count($out) < 12) {
+                $out[] = ['nombre' => cortar($nombre, 60), 'en' => $etiqueta];
+            }
+        }
+    }
+    return $out;
 }
 
 // El token solo viaja a Meta. La dirección de pruebas (un «Meta» falso en la misma máquina) solo se acepta si es de esta máquina.
@@ -280,7 +326,8 @@ function manejar()
         if (isset($_GET['estado'])) {
             responder(200, ['ok' => true, 'configurado' => $configurado, 'modo_prueba' => !empty($cfg['test_event_code']),
                 'version_api' => $cfg['graph_version'] ?? HP_VERSION, 'ip_detectada' => ip_cliente(), 'curl' => function_exists('curl_init'),
-                'secreto_en' => $cfg['__ubicacion'] ?: null, 'ultimo_envio' => leer_ultimo()]);
+                'secreto_en' => $cfg['__ubicacion'] ?: null, 'buscado' => $cfg['__buscado'], 'parecidos' => $configurado ? [] : nombres_parecidos(),
+                'ultimo_envio' => leer_ultimo()]);
         }
         header('Allow: POST');
         responder(405, ['ok' => false, 'error' => 'metodo']);
