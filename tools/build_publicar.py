@@ -94,6 +94,13 @@ def main():
         if not os.path.exists(src):
             print('  (no existe, se omite):', f); continue
         shutil.copy2(src, os.path.join(OUT, f)); copied.append(f)
+    # Relevo de la API de conversiones (PHP): viaja con el sitio. El token NO: vive solo en un archivo del servidor (docs/capi-meta.md)
+    api_dir = os.path.join(ROOT, 'api')
+    if os.path.isdir(api_dir):
+        for fn in sorted(os.listdir(api_dir)):
+            if fn.endswith('.php'):
+                os.makedirs(os.path.join(OUT, 'api'), exist_ok=True)
+                shutil.copy2(os.path.join(api_dir, fn), os.path.join(OUT, 'api', fn)); copied.append('api/' + fn)
     for d in DIRS:
         for base, dirs, files in os.walk(os.path.join(ROOT, d)):
             dirs[:] = [x for x in dirs if x not in JUNK]

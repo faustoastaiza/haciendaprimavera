@@ -10,6 +10,8 @@ Contrato (ver docs/trazabilidad-whatsapp.md):
     ni data-*, ni window.open/location en scripts (el JSON-LD no cuenta; mayúsculas y minúsculas da igual).
   - Todo botón que lleva al contacto es <a href="#contacto"> con un data-cta único y sin target (nunca abre pestañas).
   - Existen #contacto y #precio (una vez cada uno) y el script de trazabilidad apunta a ellos.
+  - Medición: Google Analytics y Clarity una sola vez; si CONFIG.capiUrl está puesto, el relevo existe.
+  - Ningún archivo del repositorio (que es PÚBLICO) contiene algo con forma de token de Meta.
 Sale con código 1 si se rompe el contrato. El aviso del ID del píxel no es un error.
 """
 import os, re, sys
@@ -133,6 +135,7 @@ def main():
             err(f'id duplicado: {i!r} ({n} veces)')
 
     pixel_id = ''
+    capi_url = ''
     js = [t for at, t in p.scripts if 'ContactoWhatsApp' in t]
     if len(js) != 1:
         err('no se encontró (o hay más de uno) el script de trazabilidad con ContactoWhatsApp')
@@ -157,6 +160,16 @@ def main():
         elif not re.fullmatch(r'\d{10,20}', m.group(1)):
             err(f'CONFIG.pixelId debe ser solo dígitos (es {m.group(1)!r})')
         pixel_id = m.group(1) if m else ''
+        mc = re.search(r"capiUrl:\s*'([^']*)'", t)
+        if mc is None:
+            err('CONFIG.capiUrl no encontrado')
+        else:
+            capi_url = mc.group(1)
+            if capi_url:
+                if not pixel_id:
+                    err('CONFIG.capiUrl está puesto pero no hay CONFIG.pixelId: el servidor enviaría eventos que el píxel no manda')
+                if not capi_url.startswith('/') or not os.path.isfile(os.path.join(ROOT, capi_url.lstrip('/').split('?')[0])):
+                    err(f'CONFIG.capiUrl apunta a un archivo que no existe en el repositorio: {capi_url!r}')
 
     # Herramientas de medición: cada una UNA sola vez (dos etiquetas = visitas y eventos duplicados)
     all_js = '\n'.join(t for at, t in p.scripts)
@@ -179,6 +192,22 @@ def main():
     if not clarity:
         warns.append('no hay Microsoft Clarity')
 
+    # El repositorio es público y se publica tal cual: un token de Meta (EAA…) o un access_token literal nunca debe estar en él
+    secreto = re.compile(r"(?<![A-Za-z0-9+/_-])EAA[A-Za-z0-9]{40,}|access_token['\"]?\s*(?::|=>|=)\s*['\"][A-Za-z0-9_\-]{40,}['\"]")
+    for base, dirs, files in os.walk(ROOT):
+        dirs[:] = [d for d in dirs if d not in ('.git', '_publicar', 'node_modules') and os.path.join(base, d) != os.path.join(ROOT, '.claude', 'deploy')]   # .claude/deploy está en .gitignore
+        for f in files:
+            fp = os.path.join(base, f)
+            if f.endswith(('.webp', '.jpg', '.png', '.svg', '.ico', '.zip', '.woff2', '.mp4')) or os.path.getsize(fp) > 3_000_000:
+                continue
+            try:
+                with open(fp, encoding='utf-8', errors='ignore') as fh:
+                    for i, linea in enumerate(fh, 1):
+                        if secreto.search(linea):
+                            err(f'parece un token de Meta en {os.path.relpath(fp, ROOT)}:{i} (el repositorio es público: bórralo y genera un token nuevo en Events Manager)')
+            except OSError:
+                pass
+
     print(f'Archivo: {PATH}\n')
     print(f'Botón único de WhatsApp: {len(wa)}  ·  Anclas a #contacto: {len(anchors)}')
     print(f'{"data-cta":<16} {"dónde":<16} texto')
@@ -190,7 +219,7 @@ def main():
         print(f'{"final (WhatsApp)":<16} {wa[0]["where"]:<16} {" ".join("".join(wa[0]["text"]).split())}')
     other = [l for l in p.links if (l['attrs'].get('href') or '').startswith(('tel:', 'mailto:'))]
     print(f'\ntel:/mailto: (no son WhatsApp, no se miden): {len(other)}')
-    print('Medición: GA4 ' + (ga_cfg[0] if ga_cfg else '—') + ' · Clarity ' + (clarity[0] if clarity else '—') + ' · Píxel de Meta ' + (pixel_id or '— (vacío)'))
+    print('Medición: GA4 ' + (ga_cfg[0] if ga_cfg else '—') + ' · Clarity ' + (clarity[0] if clarity else '—') + ' · Píxel de Meta ' + (pixel_id or '— (vacío)') + ' · API de conversiones ' + (capi_url if capi_url else 'apagada (solo navegador)'))
     for w in warns:
         print('AVISO:', w)
     if errors:

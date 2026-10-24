@@ -2678,7 +2678,7 @@ html:not(.js) .calif-head, html:not(.js) .calif-sub, html:not(.js) .calif-q, htm
 
           <a class="btn btn--wa btn--xl btn--block" href="https://wa.me/573178927252?text=Hola%2C%20estuve%20revisando%20la%20web%20de%20Hacienda%20Primavera%20y%20quiero%20m%C3%A1s%20informaci%C3%B3n" data-wa data-cta="final" target="_blank" rel="noopener" aria-describedby="calif-msg"><svg class="icon icon--fill" aria-hidden="true"><use href="#i-wa"/></svg>Escribir por WhatsApp<span class="sr-only"> (se abre en una pestaña nueva)</span></a>
           <p class="calif-note">Sin compromiso. También puedes escribir sin responder las preguntas.</p>
-          <p class="calif-legal">Al escribirnos por WhatsApp compartes tu número y las respuestas que elijas con Proarquitectura Constructora S.A.S., responsable del tratamiento, para atender tu consulta sobre Hacienda Primavera. Puedes pedir conocer, actualizar, rectificar o suprimir tus datos escribiendo a <a href="mailto:comercial@proarquitectura.co">comercial@proarquitectura.co</a>. La página usa Google Analytics y Microsoft Clarity para medir su uso, incluidas las respuestas que eliges aquí.</p>
+          <p class="calif-legal">Al escribirnos por WhatsApp compartes tu número y las respuestas que elijas con Proarquitectura Constructora S.A.S., responsable del tratamiento, para atender tu consulta sobre Hacienda Primavera. Puedes pedir conocer, actualizar, rectificar o suprimir tus datos escribiendo a <a href="mailto:comercial@proarquitectura.co">comercial@proarquitectura.co</a>. La página usa Google Analytics, Microsoft Clarity y el Píxel de Meta para medir su uso, incluidas las respuestas que eliges aquí.</p>
         </div>
       </div>
 
@@ -2762,7 +2762,7 @@ html:not(.js) .calif-head, html:not(.js) .calif-sub, html:not(.js) .calif-q, htm
     <div class="footer-legal">
       <p>Las imágenes y planos contenidos en esta información publicitaria son una representación artística del proyecto; pueden presentar diferencias en acabados, especificaciones, elementos mostrados, formas, medidas y texturas. El producto final no contiene los elementos decorativos expuestos en estas ilustraciones.</p>
       <p>El modelo de rentas cortas está sujeto al reglamento del proyecto y a la normativa vigente. La información de esta página es de carácter comercial y no constituye promesa de rentabilidad ni de ocupación. Precios sujetos a disponibilidad y etapa de comercialización. La compra de solo el lote está sujeta a condiciones y restricciones: la construcción debe ajustarse al Reglamento de Propiedad Horizontal (RPH) para conservar la estética del conjunto.</p>
-      <p>Este sitio usa cookies y herramientas de medición (Google Analytics y Microsoft Clarity) para entender cómo se usa la página y mejorarla.</p>
+      <p>Este sitio usa cookies y herramientas de medición (Google Analytics, Microsoft Clarity y el Píxel de Meta) para entender cómo se usa la página y mejorarla.</p>
     </div>
     <div class="footer-bottom mono">
       <span>© 2026 Hacienda Primavera · Un desarrollo de PROA</span>
@@ -3376,9 +3376,12 @@ html:not(.js) .calif-head, html:not(.js) .calif-sub, html:not(.js) .calif-q, htm
   const CONFIG = {
     proyecto: 'hacienda-primavera',
     contentName: 'Hacienda Primavera',
-    // ID del píxel de Meta de ESTE proyecto (solo dígitos). Vacío = no se instala desde aquí.
+    // ID del píxel de Meta de ESTE proyecto (solo dígitos): conjunto de datos «PIXEL HACIENDA». Vacío = no se instala desde aquí.
     // Déjalo vacío si el píxel lo instala GTM: un mismo ID nunca va en los dos sitios.
-    pixelId: '',
+    pixelId: '1879621982910759',
+    // Relevo de la API de conversiones (servidor): api/meta-eventos.php. Vacío = los eventos solo salen del navegador.
+    // El token de Meta NO va aquí: vive en un archivo secreto en el servidor (docs/capi-meta.md). Sin ese archivo, el relevo no hace nada.
+    capiUrl: '',
     destino: '#contacto',   // sección con el botón único de WhatsApp
     precio: '#precio',      // bloque de precio que mide VioPrecio
     // Calidad del lead: umbrales iniciales, para ajustar con datos reales
@@ -3399,6 +3402,13 @@ html:not(.js) .calif-head, html:not(.js) .calif-sub, html:not(.js) .calif-q, htm
     .join('')
     .trim();
 
+  // Identificador único de cada evento: el MISMO viaja con el píxel (navegador) y con la API de conversiones (servidor)
+  // para que Meta cuente una sola vez cada acción.
+  const nuevoId = () => {
+    try { if (window.crypto && typeof window.crypto.randomUUID === 'function') return window.crypto.randomUUID(); } catch (e) { /* sin crypto */ }
+    return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 12);
+  };
+
   /* ── Píxel de Meta (solo si hay ID y nadie más lo instaló) ── */
   if (CONFIG.pixelId && typeof window.fbq !== 'function') {
     const n = (window.fbq = function () { if (n.callMethod) n.callMethod.apply(n, arguments); else n.queue.push(arguments); });
@@ -3418,11 +3428,46 @@ html:not(.js) .calif-head, html:not(.js) .calif-sub, html:not(.js) .calif-q, htm
     n('track', 'PageView');
   }
 
-  /* ── Envío: píxel (si existe) + dataLayer + Google Analytics 4 + Clarity ── */
+  /* ── API de conversiones (servidor) ──
+     Cada evento importante sale dos veces: del navegador (píxel) y del servidor (relevo en CONFIG.capiUrl). Meta los junta en uno solo
+     cuando el nombre y el event_id son idénticos. El relevo agrega la IP y el agente de usuario reales y es quien guarda el token. */
+  const cookie = (nombre) => {
+    try {
+      const m = document.cookie.match(new RegExp('(?:^|; )' + nombre + '=([^;]*)'));
+      return m ? decodeURIComponent(m[1]) : '';
+    } catch (e) { return ''; }
+  };
+  const fbclid = (() => {
+    try { return (new URLSearchParams(window.location.search).get('fbclid') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 200); } catch (e) { return ''; }
+  })();
+  // _fbc: la cookie del píxel; si aún no existe (píxel bloqueado o sin cargar) se arma con el fbclid del anuncio, como hace Meta
+  const fbcValor = () => {
+    const c = cookie('_fbc');
+    if (c) return c;
+    if (!fbclid) return '';
+    let t = store.get('hp_fbc_t');
+    if (!t) { t = String(Date.now()); store.set('hp_fbc_t', t); }
+    return 'fb.1.' + t + '.' + fbclid;
+  };
+  const servidor = (nombre, id, datos) => {
+    if (!CONFIG.capiUrl) return;
+    try {
+      const cuerpo = JSON.stringify({ event_name: nombre, event_id: id, event_source_url: window.location.href.split('#')[0], fbp: cookie('_fbp'), fbc: fbcValor(), custom_data: datos });
+      if (typeof window.fetch === 'function') {
+        window.fetch(CONFIG.capiUrl, { method: 'POST', body: cuerpo, keepalive: true, credentials: 'omit', headers: { 'Content-Type': 'text/plain;charset=UTF-8' } }).catch(() => { /* idem */ });
+      } else if (navigator.sendBeacon) {
+        navigator.sendBeacon(CONFIG.capiUrl, cuerpo);
+      }
+    } catch (e) { /* el servidor nunca debe romper la página */ }
+  };
+
+  /* ── Envío: píxel (si existe) + servidor (CAPI) + dataLayer + Google Analytics 4 + Clarity ── */
   const dl = (window.dataLayer = window.dataLayer || []);
   const send = (fbEvent, dlEvent, data) => {
     const payload = Object.assign({ proyecto: CONFIG.proyecto }, data);
-    try { if (fbEvent && typeof window.fbq === 'function') window.fbq('trackCustom', fbEvent, payload); } catch (e) { /* el píxel nunca debe romper la página */ }   // fbEvent vacío = señal solo para GA4, Clarity y dataLayer
+    const eventId = fbEvent ? nuevoId() : '';   // fbEvent vacío = señal solo para GA4, Clarity y dataLayer: ni píxel ni servidor
+    try { if (fbEvent && typeof window.fbq === 'function') window.fbq('trackCustom', fbEvent, payload, { eventID: eventId }); } catch (e) { /* el píxel nunca debe romper la página */ }
+    if (fbEvent) servidor(fbEvent, eventId, payload);
     try { dl.push(Object.assign({ event: dlEvent }, payload)); } catch (e) { /* idem */ }
     // GA4 con gtag.js directo (sin GTM): los objetos que se empujan al dataLayer no viajan solos, hay que enviarlos como evento
     try { if (typeof window.gtag === 'function') window.gtag('event', dlEvent, payload); } catch (e) { /* idem */ }

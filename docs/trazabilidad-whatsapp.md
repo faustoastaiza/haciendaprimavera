@@ -102,23 +102,24 @@ Hola, estuve revisando la web de Hacienda Primavera y quiero más información (
 - `calificador_completo`: respondió las tres preguntas. Se cruza con `calidad` para crear audiencias o conversiones más finas (ej. `calidad` = alta **o** `calificador_completo` = true).
 - `calidad`: **alta** = vio el precio, ≥ 40 % y ≥ 60 s · **media** = (vio el precio o ≥ 20 %) y ≥ 20 s · **baja** = el resto. Son umbrales iniciales (`CONFIG.alta` y `CONFIG.media` en el script): ajústalos con datos reales.
 
-## 5. Instalación del píxel (pendiente: el ID)
+## 5. Píxel de Meta y API de conversiones
 
-Falta el ID del píxel de Hacienda Primavera. Hasta que se ponga, **nada llega a Meta**: los eventos solo van al `dataLayer`.
-
-- **Opción A, desde el código:** pega el ID (solo dígitos) en `CONFIG.pixelId` del bloque `TRAZABILIDAD WHATSAPP` de `index.html`. El script instala el píxel, envía `PageView` y desactiva el `PageView` automático por cambio de hash (`disablePushState`). Sin eso, el píxel suma un `PageView` por cada salto por ancla o enlace de menú (comprobado con la librería real de Meta).
-- **Opción B, desde GTM:** deja `pixelId` vacío. Los eventos usan el `fbq` que ya exista. La etiqueta del píxel debe incluir `fbq.disablePushState = true;` **antes** del `init` (puesto después no hace efecto).
+- **Píxel instalado desde el código** (opción A): `CONFIG.pixelId = '1879621982910759'` (conjunto de datos «PIXEL HACIENDA») en el bloque `TRAZABILIDAD WHATSAPP` de `index.html`. El script instala el píxel, envía `PageView` y desactiva el `PageView` automático por cambio de hash (`disablePushState`): sin eso, el píxel suma un `PageView` por cada salto por ancla o enlace de menú (comprobado con la librería real de Meta).
+- **API de conversiones (servidor):** `ContactoWhatsApp`, `ClicIntencionPrecio` y `VioPrecio` salen con un `eventID` y, si `CONFIG.capiUrl` está puesto, también por `api/meta-eventos.php` hacia Meta para recuperar lo que el navegador pierde (bloqueadores, Safari/iOS). Meta junta ambas copias (mismo nombre + mismo `event_id`). **El token vive solo en un archivo del servidor, nunca en el repositorio.** Todo el detalle —puesta en marcha, qué configurar en Meta, pruebas y problemas frecuentes— está en [`docs/capi-meta.md`](capi-meta.md).
+- **Opción B, desde GTM** (no es el caso hoy): dejar `pixelId` vacío; los eventos usan el `fbq` que ya exista; la etiqueta del píxel debe incluir `fbq.disablePushState = true;` **antes** del `init`.
 - **Un mismo ID nunca va en los dos sitios**: provoca «Duplicate Pixel ID» y `PageView` de más. Si ya hay un `fbq` en la página, el código no instala otro.
-- Para el paquete de producción: `python3 tools/build_publicar.py --require-pixel` se detiene si `pixelId` está vacío. Sin el flag solo avisa al final.
+- `python3 tools/build_publicar.py --require-pixel` se detiene si `pixelId` está vacío; `tools/check_trazabilidad.py` además falla si hay algo con forma de token de Meta en cualquier archivo del repositorio (que es público) o si `capiUrl` apunta a un archivo que no existe.
 
-Después de publicar: dispara `ContactoWhatsApp` una vez en producción y crea en Events Manager la conversión personalizada (ver la regla en §3). Esa es la que optimiza la campaña. La **verificación de dominio de Meta** ya está instalada: la etiqueta `facebook-domain-verification` está en el `<head>` de `index.html` (no la borres). Se verifica en Business Manager → Configuración del negocio → Seguridad de la marca → Dominios → `haciendaprimavera.co` → Verificar.
+Después de publicar: crea en Events Manager la conversión personalizada (regla en §3 y pasos en `docs/capi-meta.md`); esa es la que optimiza la campaña. La **verificación de dominio de Meta** ya está instalada: la etiqueta `facebook-domain-verification` está en el `<head>` de `index.html` (no la borres).
 
 ## 6. Verificación en 5 minutos
 
 Abre la página con `?utm_source=fb&utm_medium=paid&utm_campaign=prueba&utm_content=anuncio1`.
 
 - [ ] `python3 tools/check_trazabilidad.py` termina en `CONTRATO OK` (también se ejecuta al armar el paquete y lo detiene si falla).
-- [ ] *Meta Pixel Helper* muestra `PageView` y **un solo** píxel por ID. Al pulsar anclas y enlaces del menú **no** aparecen `PageView` nuevos.
+- [ ] *Meta Pixel Helper* muestra `PageView` y **un solo** píxel por ID (`1879621982910759`). Al pulsar anclas y enlaces del menú **no** aparecen `PageView` nuevos.
+- [ ] Events Manager → *Probar eventos*: cada evento personalizado aparece como **Navegador** y como **Servidor** con el mismo ID, marcado como deduplicado (ver `docs/capi-meta.md`).
+- [ ] Google Analytics → Informes → Tiempo real: se ve la visita y, al pulsar el botón, el evento `contacto_whatsapp`. Clarity → Grabaciones: la sesión aparece en unos minutos.
 - [ ] Al quedarte con el precio entero en pantalla 1 s, `VioPrecio` aparece **una sola vez**.
 - [ ] Un clic en cualquier ancla dispara `ClicIntencionPrecio` y **no** abre WhatsApp.
 - [ ] El botón «Escribir por WhatsApp» abre WhatsApp en pestaña nueva y dispara **un solo** `ContactoWhatsApp` con `boton = final`.
@@ -139,8 +140,10 @@ Abre la página con `?utm_source=fb&utm_medium=paid&utm_campaign=prueba&utm_cont
 
 ## 8. Pendientes y decisiones abiertas
 
-- **ID del píxel** (y GTM, GA4 o Clarity, si se quieren).
-- **Aviso de cookies:** el pie de página y el formulario informan del uso de cookies y herramientas de medición (aviso informativo, sin ventana de consentimiento). Si se quiere consentimiento previo, falta un banner.
+- **Token de la API de conversiones y archivo secreto en el servidor**, y la activación de `capiUrl` (ver `docs/capi-meta.md`).
+- **Conversión personalizada en Meta** y ajustes de la pestaña «Configuración» del conjunto de datos (lista en `docs/capi-meta.md`).
+- **Ajustes de Google Analytics** (medición mejorada, evento clave, dimensiones): los hace quien tenga acceso (§3).
+- **Aviso de cookies:** el pie de página y el formulario informan del uso de cookies y herramientas de medición (Google Analytics, Clarity y el Píxel de Meta). Es un aviso informativo, sin ventana de consentimiento: si se quiere consentimiento previo, falta un banner. **Si se agrega o se quita una herramienta, hay que actualizar esas dos frases.**
 - **Aviso legal del formulario:** adaptado del de Alegranza; que lo revise quien lleve lo legal.
 - **Llamadas y correos** no se miden.
 - `llms.txt` conserva el enlace `wa.me` como dato de contacto para asistentes de IA (no es parte de la página y no pasa por el botón medido).
