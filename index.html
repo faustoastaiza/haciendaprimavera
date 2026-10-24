@@ -1347,6 +1347,10 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
 .calif-opt input:checked + .calif-chip::before { width: 5px; margin-right: 0; border-color: var(--arcilla-soft); }
 .calif-opt input:focus-visible + .calif-chip { outline: 2px solid var(--arcilla-ink); outline-offset: 3px; }
 .calif-opt:active .calif-chip { transform: scale(.97); }
+@media (forced-colors: active) {
+  .calif-opt input:not(:checked) + .calif-chip::before { display: none; }   /* sin marca suelta en las opciones sin marcar */
+  .calif-opt input:checked + .calif-chip { border: 3px solid Highlight; }
+}
 
 /* Vista previa del mensaje (burbuja de WhatsApp) */
 .calif-preview {
@@ -1987,14 +1991,14 @@ html:not(.js) .calif-head, html:not(.js) .calif-sub, html:not(.js) .calif-q, htm
             <span class="typo-cta" aria-hidden="true"><span class="typo-cta-off">Ver modelo<svg class="icon"><use href="#i-arrow"/></svg></span><span class="typo-cta-on"><svg class="icon"><use href="#i-check"/></svg>Seleccionado</span></span>
           </button>
         </div>
-        <a class="typo-own" href="#contacto" data-cta="diseno-propio">
+        <a class="typo-own" href="#contacto" data-cta="diseno-propio" data-texto="Cotizar mi diseño" aria-label="Tu propio diseño: cotizar mi diseño" aria-describedby="typo-own-txt typo-own-note">
           <span class="typo-own-plus" aria-hidden="true"><svg class="icon"><use href="#i-plus"/></svg></span>
           <span class="typo-own-ico" aria-hidden="true"><svg viewBox="0 0 96 60" focusable="false"><g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="84" height="48" stroke-dasharray="3 3" opacity=".55"/><path d="M22 40V22h22v-8h30v26z"/><path d="M44 22v18M58 28h16" opacity=".5"/><path d="M22 46h52M22 43v6M74 43v6" opacity=".7"/></g></svg></span>
           <span class="typo-own-id"><span class="typo-name">Tu propio diseño</span><span class="typo-meta mono">A tu medida · con PROA</span></span>
-          <span class="typo-own-txt">¿Ninguna es exactamente la tuya? Cuéntanos cómo la imaginas: la diseñamos, la construimos y te la cotizamos.*</span>
+          <span class="typo-own-txt" id="typo-own-txt">¿Ninguna es exactamente la tuya? Cuéntanos cómo la imaginas: la diseñamos, la construimos y te la cotizamos.*</span>
           <span class="typo-own-cta">Cotizar mi diseño<svg class="icon arr" aria-hidden="true"><use href="#i-arrow"/></svg></span>
         </a>
-        <p class="typo-own-note">*Aplican condiciones y restricciones: la construcción está sujeta al Reglamento de Propiedad Horizontal (RPH) para conservar la estética del conjunto.</p>
+        <p class="typo-own-note" id="typo-own-note">*Aplican condiciones y restricciones: la construcción está sujeta al Reglamento de Propiedad Horizontal (RPH) para conservar la estética del conjunto.</p>
       </div>
 
       <!-- Tulipán -->
@@ -2678,7 +2682,7 @@ html:not(.js) .calif-head, html:not(.js) .calif-sub, html:not(.js) .calif-q, htm
 
           <a class="btn btn--wa btn--xl btn--block" href="https://wa.me/573178927252?text=Hola%2C%20estuve%20revisando%20la%20web%20de%20Hacienda%20Primavera%20y%20quiero%20m%C3%A1s%20informaci%C3%B3n" data-wa data-cta="final" target="_blank" rel="noopener" aria-describedby="calif-msg"><svg class="icon icon--fill" aria-hidden="true"><use href="#i-wa"/></svg>Escribir por WhatsApp<span class="sr-only"> (se abre en una pestaña nueva)</span></a>
           <p class="calif-note">Sin compromiso. También puedes escribir sin responder las preguntas.</p>
-          <p class="calif-legal">Al escribirnos por WhatsApp compartes tu número y las respuestas que elijas con Proarquitectura Constructora S.A.S., responsable del tratamiento, para atender tu consulta sobre Hacienda Primavera. Puedes pedir conocer, actualizar, rectificar o suprimir tus datos escribiendo a <a href="mailto:comercial@proarquitectura.co">comercial@proarquitectura.co</a>. La página usa Google Analytics, Microsoft Clarity y el Píxel de Meta para medir su uso, incluidas las respuestas que eliges aquí.</p>
+          <p class="calif-legal">Al escribirnos por WhatsApp compartes tu número y las respuestas que elijas con Proarquitectura Constructora S.A.S., responsable del tratamiento, para atender tu consulta sobre Hacienda Primavera. Puedes pedir conocer, actualizar, rectificar o suprimir tus datos escribiendo a <a href="mailto:comercial@proarquitectura.co">comercial@proarquitectura.co</a>. La página usa Google Analytics, Microsoft Clarity (que puede grabar tu navegación) y el Píxel de Meta, incluida su API de conversiones (que recibe desde el servidor tu dirección IP y tu tipo de navegador), para medir su uso y la publicidad, incluidas las respuestas que eliges aquí.</p>
         </div>
       </div>
 
@@ -2762,7 +2766,7 @@ html:not(.js) .calif-head, html:not(.js) .calif-sub, html:not(.js) .calif-q, htm
     <div class="footer-legal">
       <p>Las imágenes y planos contenidos en esta información publicitaria son una representación artística del proyecto; pueden presentar diferencias en acabados, especificaciones, elementos mostrados, formas, medidas y texturas. El producto final no contiene los elementos decorativos expuestos en estas ilustraciones.</p>
       <p>El modelo de rentas cortas está sujeto al reglamento del proyecto y a la normativa vigente. La información de esta página es de carácter comercial y no constituye promesa de rentabilidad ni de ocupación. Precios sujetos a disponibilidad y etapa de comercialización. La compra de solo el lote está sujeta a condiciones y restricciones: la construcción debe ajustarse al Reglamento de Propiedad Horizontal (RPH) para conservar la estética del conjunto.</p>
-      <p>Este sitio usa cookies y herramientas de medición (Google Analytics, Microsoft Clarity y el Píxel de Meta) para entender cómo se usa la página y mejorarla.</p>
+      <p>Este sitio usa cookies y herramientas de medición y publicidad: Google Analytics y Microsoft Clarity (que puede grabar la sesión de navegación) para entender cómo se usa la página y mejorarla, y el Píxel de Meta con su API de conversiones (que también recibe tu dirección IP y el tipo de navegador) para medir y optimizar la publicidad. Puedes rechazarlas desde los ajustes de tu navegador o con un bloqueador de contenido.</p>
     </div>
     <div class="footer-bottom mono">
       <span>© 2026 Hacienda Primavera · Un desarrollo de PROA</span>
@@ -3611,7 +3615,7 @@ html:not(.js) .calif-head, html:not(.js) .calif-sub, html:not(.js) .calif-q, htm
   $$('a[href="' + CONFIG.destino + '"]').forEach((a) => {
     a.addEventListener('click', () => {
       preseleccionar(a.dataset.cta);
-      send('ClicIntencionPrecio', 'cta_precio_click', { seccion: a.dataset.cta || clean(a.textContent), texto: clean(a.textContent) });
+      send('ClicIntencionPrecio', 'cta_precio_click', { seccion: a.dataset.cta || clean(a.textContent), texto: clean(a.dataset.texto || a.textContent) });
     });
   });
 

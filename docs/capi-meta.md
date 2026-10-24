@@ -85,10 +85,13 @@ Los nombres exactos pueden variar según el idioma y la versión de tu panel; es
 
 ## 6. Seguridad y privacidad
 
-- Token solo en el servidor; el repositorio es público: **nunca** lo pegues en `index.html`, `api/` ni `docs/`. `tools/check_trazabilidad.py` falla si encuentra algo con forma de token de Meta.
-- El relevo acepta solo `POST` desde `haciendaprimavera.co`, hasta 8 KB, hasta 60 solicitudes por minuto y por IP, solo los tres eventos de la lista y solo los campos conocidos. Las respuestas de error no incluyen el token.
-- Aviso al visitante: el formulario y el pie de página dicen que la página usa el Píxel de Meta (con el resto de herramientas). Si se agrega o quita una herramienta, hay que actualizar esas dos frases.
-- Si el token se filtró (por ejemplo, se pegó en un chat), **reemplázalo**: genera uno nuevo en Events Manager, ponlo en el archivo secreto y **revoca el anterior** (Configuración del negocio → Usuarios del sistema, o donde tu panel muestre los tokens del conjunto de datos). Comprueba después en «Probar eventos» que los eventos de Servidor siguen llegando.
+- **Token solo en el servidor.** El repositorio es público: **nunca** va en `index.html`, `api/` ni `docs/`. `tools/check_trazabilidad.py` falla si encuentra algo con forma de token de Meta, `.gitignore` ignora `capi-secret.php` y `.htaccess` devuelve 403 a cualquier `capi-secret.php` pedido por la web. Las respuestas de error y `?estado` no incluyen el token.
+- **Qué acepta el relevo.** Solo `POST` desde `haciendaprimavera.co` (origen y `Sec-Fetch-Site`), hasta 8 KB, solo los tres eventos de la lista, solo campos conocidos con valores de las listas y rangos que usa la página, hasta **40 solicitudes por minuto por IP y 300 en total**. La IP sale de `REMOTE_ADDR` (detrás del CDN de Hostinger es el visitante); `X-Forwarded-For` y `True-Client-IP` los escribe quien quiera, así que solo se miran si `REMOTE_ADDR` fuera de una red interna.
+- **Qué NO es: autenticación.** Cualquier programa puede imitar el origen del sitio y mandar eventos «válidos», igual que cualquiera puede mandarle eventos falsos al píxel del navegador (su dirección es pública). Los topes y las listas solo **acotan el daño**; no lo impiden. Si algún día se notan conversiones sospechosas, la salida es revisar `?estado` y los patrones de `repetido`/`calidad` en Meta.
+- **Si se agrega una opción al formulario**, hay que agregarla también a `HP_ENUMS` en `api/meta-eventos.php`; si no, el servidor descartaría ese valor en silencio. `tools/check_trazabilidad.py` lo avisa.
+- **Respuesta rápida.** Cuando el servidor lo permite (LiteSpeed), el relevo contesta `204` al navegador antes de hablar con Meta, y los tiempos de espera hacia Meta son cortos (2 s para conectar, 4 s en total), para no tener procesos de PHP esperando.
+- **Aviso al visitante.** El pie de página y el formulario dicen qué herramientas usa la página: Google Analytics, Clarity (que puede **grabar la sesión de navegación**) y el Píxel de Meta con su API de conversiones (que también recibe la **IP y el tipo de navegador**, para medir y optimizar la publicidad), y que se pueden rechazar desde el navegador o con un bloqueador. **No hay ventana de consentimiento previo ni botón para rechazar**: si se quiere consentimiento previo (recomendable con pauta), falta un banner. Si se agrega o quita una herramienta, hay que actualizar esas dos frases.
+- **Si el token se filtró** (por ejemplo, se pegó en un chat), **reemplázalo**: genera uno nuevo en Events Manager, ponlo en el archivo secreto y **revoca el anterior** (Configuración del negocio → Usuarios del sistema, o donde tu panel muestre los tokens del conjunto de datos). Comprueba después en «Probar eventos» que los eventos de Servidor siguen llegando.
 
 ## 7. Si algo falla
 
@@ -102,6 +105,6 @@ Los nombres exactos pueden variar según el idioma y la versión de tu panel; es
 
 ## 8. Cómo se probó (sin tocar Meta real)
 
-Servidor PHP local + un «Meta» de mentira + Chrome sin cabeza: el relevo rechaza lo inválido (origen, JSON, evento, `event_id`, tamaño, límite), filtra campos, reenvía a `/v25.0/<píxel>/events` con el token solo en el servidor, y el `event_id` del servidor coincide con el `eventID` del píxel. Con la librería real del píxel (envío bloqueado): un solo `PageView`, ninguno por saltos de ancla y `eid` en cada evento.
+Servidor PHP local + un «Meta» de mentira + Chrome sin cabeza: el relevo rechaza lo inválido (origen, JSON, evento, `event_id`, tamaño, topes por IP y totales), filtra campos y valores, ignora IP falsas, reenvía a `/v25.0/<píxel>/events` con el token solo en el servidor, y el `event_id` del servidor coincide con el `eventID` del píxel. Con la librería real del píxel (envío bloqueado): un solo `PageView`, ninguno por saltos de ancla y `eid` en cada evento.
 
 Fuentes: [Mejores prácticas de la API de conversiones](https://developers.facebook.com/docs/marketing-api/conversions-api/best-practices) · [Graph API v25.0](https://developers.facebook.com/docs/graph-api/changelog/version25.0).

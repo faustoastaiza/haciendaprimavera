@@ -12,6 +12,8 @@ Contrato (ver docs/trazabilidad-whatsapp.md):
   - Existen #contacto y #precio (una vez cada uno) y el script de trazabilidad apunta a ellos.
   - Medición: Google Analytics y Clarity una sola vez; si CONFIG.capiUrl está puesto, el relevo existe.
   - Ningún archivo del repositorio (que es PÚBLICO) contiene algo con forma de token de Meta.
+  - Formulario: cada opción (radio) tiene un valor que el relevo del servidor acepta (HP_ENUMS en api/meta-eventos.php) y cada data-desde
+    corresponde a una ancla que existe.
 Sale con código 1 si se rompe el contrato. El aviso del ID del píxel no es un error.
 """
 import os, re, sys
@@ -191,6 +193,28 @@ def main():
         warns.append('no hay Google Analytics 4 (gtag): los eventos solo llegan a Clarity/Meta')
     if not clarity:
         warns.append('no hay Microsoft Clarity')
+
+    # Formulario ↔ servidor: lo que la página manda debe estar en las listas que el relevo acepta (si no, el servidor lo descartaría en silencio)
+    radios = [(at.get('name', ''), at.get('value', ''), at.get('data-desde', '')) for tag, at, where in p.tags if tag == 'input' and at.get('type') == 'radio']
+    ctas = {(l['attrs'].get('data-cta') or '') for l in anchors}
+    for name, value, desde in radios:
+        if desde and desde not in ctas:
+            err(f'la opción {name}={value} dice data-desde={desde!r}, pero no hay ninguna ancla con ese data-cta')
+    php_path = os.path.join(ROOT, 'api', 'meta-eventos.php')
+    if radios and os.path.isfile(php_path):
+        php = open(php_path, encoding='utf-8').read()
+        bloque = re.search(r"const HP_ENUMS = \[(.*?)\n\];", php, re.S)
+        enums = {}
+        if bloque:
+            for m in re.finditer(r"'(\w+)'\s*=>\s*\[(.*?)\]", bloque.group(1), re.S):
+                enums[m.group(1)] = set(re.findall(r"'([^']*)'", m.group(2)))
+        else:
+            err('no encontré HP_ENUMS en api/meta-eventos.php')
+        for name, value, desde in radios:
+            if name not in enums:
+                err(f'el relevo no conoce la pregunta {name!r} (agrégala a HP_ENUMS en api/meta-eventos.php)')
+            elif value not in enums[name]:
+                err(f'la opción {name}={value!r} no está en HP_ENUMS de api/meta-eventos.php: el servidor la descartaría')
 
     # El repositorio es público y se publica tal cual: un token de Meta (EAA…) o un access_token literal nunca debe estar en él
     secreto = re.compile(r"(?<![A-Za-z0-9+/_-])EAA[A-Za-z0-9]{40,}|access_token['\"]?\s*(?::|=>|=)\s*['\"][A-Za-z0-9_\-]{40,}['\"]")

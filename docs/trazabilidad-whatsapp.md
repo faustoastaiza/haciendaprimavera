@@ -143,7 +143,7 @@ Abre la página con `?utm_source=fb&utm_medium=paid&utm_campaign=prueba&utm_cont
 - **Token de la API de conversiones y archivo secreto en el servidor**, y la activación de `capiUrl` (ver `docs/capi-meta.md`).
 - **Conversión personalizada en Meta** y ajustes de la pestaña «Configuración» del conjunto de datos (lista en `docs/capi-meta.md`).
 - **Ajustes de Google Analytics** (medición mejorada, evento clave, dimensiones): los hace quien tenga acceso (§3).
-- **Aviso de cookies:** el pie de página y el formulario informan del uso de cookies y herramientas de medición (Google Analytics, Clarity y el Píxel de Meta). Es un aviso informativo, sin ventana de consentimiento: si se quiere consentimiento previo, falta un banner. **Si se agrega o se quita una herramienta, hay que actualizar esas dos frases.**
+- **Aviso de cookies y de medición:** el pie de página y el formulario informan de Google Analytics, Clarity (que puede grabar la sesión) y el Píxel de Meta con su API de conversiones (que recibe IP y tipo de navegador). Es un aviso informativo: **no hay consentimiento previo ni botón para rechazar**; con pauta conviene un banner (decisión pendiente). **Si se agrega o se quita una herramienta, hay que actualizar esas dos frases.**
 - **Aviso legal del formulario:** adaptado del de Alegranza; que lo revise quien lleve lo legal.
 - **Llamadas y correos** no se miden.
 - `llms.txt` conserva el enlace `wa.me` como dato de contacto para asistentes de IA (no es parte de la página y no pasa por el botón medido).
