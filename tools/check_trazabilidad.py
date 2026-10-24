@@ -132,6 +132,7 @@ def main():
         if n > 1:
             err(f'id duplicado: {i!r} ({n} veces)')
 
+    pixel_id = ''
     js = [t for at, t in p.scripts if 'ContactoWhatsApp' in t]
     if len(js) != 1:
         err('no se encontró (o hay más de uno) el script de trazabilidad con ContactoWhatsApp')
@@ -148,13 +149,35 @@ def main():
         if m is None:
             err('CONFIG.pixelId no encontrado')
         elif not m.group(1):
-            msg = 'CONFIG.pixelId está vacío: el código NO instala el píxel de Meta. Está bien si lo instala GTM; si no, nada llega a Meta (hoy la página no tiene GTM ni GA: el dataLayer no lo lee nadie).'
+            msg = 'CONFIG.pixelId está vacío: el código NO instala el píxel de Meta. Está bien si lo instala GTM; si no, nada llega a Meta (los eventos solo irían a Google Analytics, Clarity y al dataLayer).'
             if REQUIRE_PIXEL:
                 err(msg)
             else:
                 warns.append(msg)
         elif not re.fullmatch(r'\d{10,20}', m.group(1)):
             err(f'CONFIG.pixelId debe ser solo dígitos (es {m.group(1)!r})')
+        pixel_id = m.group(1) if m else ''
+
+    # Herramientas de medición: cada una UNA sola vez (dos etiquetas = visitas y eventos duplicados)
+    all_js = '\n'.join(t for at, t in p.scripts)
+    ga_src = [re.search(r'[?&]id=(G-[A-Z0-9]+)', at.get('src', '')).group(1) for tag, at, where in p.tags
+              if tag == 'script' and 'googletagmanager.com/gtag/js' in at.get('src', '') and re.search(r'[?&]id=(G-[A-Z0-9]+)', at.get('src', ''))]
+    ga_cfg = re.findall(r"gtag\(\s*['\"]config['\"]\s*,\s*['\"](G-[A-Z0-9]+)['\"]", all_js)
+    clarity = re.findall(r"clarity\.ms/tag/.*?['\"]clarity['\"]\s*,\s*['\"]script['\"]\s*,\s*['\"]([a-z0-9]+)['\"]", all_js, re.S)
+    gtm = [at.get('src', '') for tag, at, where in p.tags if tag == 'script' and 'googletagmanager.com/gtm.js' in at.get('src', '')] \
+        + re.findall(r"googletagmanager\.com/gtm\.js\?id=", all_js)
+    if len(ga_src) > 1 or len(ga_cfg) > 1:
+        err(f'Google Analytics está instalado más de una vez (gtag/js: {ga_src}, config: {ga_cfg}): cuenta cada visita dos veces')
+    if ga_src and ga_cfg and ga_src[0] != ga_cfg[0]:
+        err(f'el ID de gtag/js ({ga_src[0]}) no coincide con el de gtag("config") ({ga_cfg[0]})')
+    if len(clarity) > 1:
+        err(f'Clarity está instalado más de una vez: {clarity}')
+    if gtm and (ga_cfg or ga_src):
+        warns.append('hay GTM y también gtag directo: si GTM tiene una etiqueta de GA4 con el mismo ID, cada evento se cuenta dos veces')
+    if not ga_cfg:
+        warns.append('no hay Google Analytics 4 (gtag): los eventos solo llegan a Clarity/Meta')
+    if not clarity:
+        warns.append('no hay Microsoft Clarity')
 
     print(f'Archivo: {PATH}\n')
     print(f'Botón único de WhatsApp: {len(wa)}  ·  Anclas a #contacto: {len(anchors)}')
@@ -167,6 +190,7 @@ def main():
         print(f'{"final (WhatsApp)":<16} {wa[0]["where"]:<16} {" ".join("".join(wa[0]["text"]).split())}')
     other = [l for l in p.links if (l['attrs'].get('href') or '').startswith(('tel:', 'mailto:'))]
     print(f'\ntel:/mailto: (no son WhatsApp, no se miden): {len(other)}')
+    print('Medición: GA4 ' + (ga_cfg[0] if ga_cfg else '—') + ' · Clarity ' + (clarity[0] if clarity else '—') + ' · Píxel de Meta ' + (pixel_id or '— (vacío)'))
     for w in warns:
         print('AVISO:', w)
     if errors:

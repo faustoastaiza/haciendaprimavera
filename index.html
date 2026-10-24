@@ -9,6 +9,23 @@
 <meta name="theme-color" content="#1B3A2C">
 <!-- Verificación de dominio de Meta (Business Manager): no borrar -->
 <meta name="facebook-domain-verification" content="okryk9mshwrr7f0cd8ds68uz2sdt22" />
+<!-- Google Analytics 4 (gtag.js): propiedad de Hacienda Primavera. Los eventos del botón único se reenvían desde el script TRAZABILIDAD WHATSAPP -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0CBJ8NRH0J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-0CBJ8NRH0J');
+</script>
+<!-- Microsoft Clarity: proyecto de Hacienda Primavera -->
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "z2vmt8wkvr");
+</script>
 <link rel="canonical" href="https://haciendaprimavera.co/">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -2519,6 +2536,7 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
     <div class="footer-legal">
       <p>Las imágenes y planos contenidos en esta información publicitaria son una representación artística del proyecto; pueden presentar diferencias en acabados, especificaciones, elementos mostrados, formas, medidas y texturas. El producto final no contiene los elementos decorativos expuestos en estas ilustraciones.</p>
       <p>El modelo de rentas cortas está sujeto al reglamento del proyecto y a la normativa vigente. La información de esta página es de carácter comercial y no constituye promesa de rentabilidad ni de ocupación. Precios sujetos a disponibilidad y etapa de comercialización. La compra de solo el lote está sujeta a condiciones y restricciones: la construcción debe ajustarse al Reglamento de Propiedad Horizontal (RPH) para conservar la estética del conjunto.</p>
+      <p>Este sitio usa cookies y herramientas de medición (Google Analytics y Microsoft Clarity) para entender cómo se usa la página y mejorarla.</p>
     </div>
     <div class="footer-bottom mono">
       <span>© 2026 Hacienda Primavera · Un desarrollo de PROA</span>
@@ -3168,12 +3186,21 @@ html:not(.js) .life-d { max-height: none; margin-top: 6px; opacity: 1; }
     n('track', 'PageView');
   }
 
-  /* ── Envío: píxel (si existe) + dataLayer (para GTM/GA4) ── */
+  /* ── Envío: píxel (si existe) + dataLayer + Google Analytics 4 + Clarity ── */
   const dl = (window.dataLayer = window.dataLayer || []);
   const send = (fbEvent, dlEvent, data) => {
     const payload = Object.assign({ proyecto: CONFIG.proyecto }, data);
     try { if (typeof window.fbq === 'function') window.fbq('trackCustom', fbEvent, payload); } catch (e) { /* el píxel nunca debe romper la página */ }
     try { dl.push(Object.assign({ event: dlEvent }, payload)); } catch (e) { /* idem */ }
+    // GA4 con gtag.js directo (sin GTM): los objetos que se empujan al dataLayer no viajan solos, hay que enviarlos como evento
+    try { if (typeof window.gtag === 'function') window.gtag('event', dlEvent, payload); } catch (e) { /* idem */ }
+    // Clarity: el evento queda como filtro de grabaciones y la calidad del lead como etiqueta de la sesión
+    try {
+      if (typeof window.clarity === 'function') {
+        window.clarity('event', dlEvent);
+        if (payload.calidad) window.clarity('set', 'calidad', payload.calidad);
+      }
+    } catch (e) { /* idem */ }
   };
 
   /* ── Origen del tráfico (UTM) ── */
