@@ -16,3 +16,10 @@ node_modules/
 _publicar/
 hacienda-primavera-para-subir.zip
 *deploy_key*
+
+# Archivo secreto de la API de conversiones de Meta: el token NUNCA va al repositorio (es público).
+# Vive solo en el servidor; estar aquí también lo protege de una limpieza de archivos sin versionar.
+capi-secret.php
+.capi-secret.php
+**/capi-secret.php
+**/.capi-secret.php

@@ -31,7 +31,7 @@ El **token de acceso nunca está en el navegador ni en el repositorio** (el repo
 ## 3. Puesta en marcha (una sola vez, la hace quien administra el hosting)
 
 1. **Token.** Events Manager → *PIXEL HACIENDA* → **Configuración** → *API de conversiones* → **Generar token de acceso**. Se muestra una sola vez. **No lo pegues en chats, correos ni en el repositorio**; si se filtra, reemplázalo (ver §6).
-2. **Archivo secreto.** En hPanel → *Administrador de archivos*, dentro de la carpeta del dominio (**un nivel arriba de `public_html`**), crea `capi-secret.php`:
+2. **Archivo secreto.** En hPanel → *Administrador de archivos* crea `capi-secret.php` **fuera de `public_html`**: en la carpeta raíz de la cuenta (la que contiene `domains`) o, si no la ves, una carpeta por encima de `public_html`. Contenido:
 
    ```php
    <?php
@@ -42,9 +42,11 @@ El **token de acceso nunca está en el navegador ni en el repositorio** (el repo
    ];
    ```
 
-   Si el administrador de archivos no deja salir de `public_html`, crea el archivo **oculto** `public_html/.capi-secret.php` (con punto): el `.htaccess` bloquea desde la web todo lo que empieza por punto. Esa opción es la menos segura y no está garantizado que sobreviva a la publicación automática desde GitHub: si después de publicar `?estado` vuelve a decir `configurado:false`, muévelo a la carpeta de arriba (la ubicación recomendada, que la publicación no toca).
+   El relevo busca ese archivo en varias carpetas por encima del sitio y en la raíz de la cuenta. **Importante:** el 24-oct-2026 el primer archivo desapareció tras una publicación automática, así que **no lo pongas dentro de `public_html`**. Si no hay más remedio, el relevo también acepta `public_html/.capi-secret.php` (o `public_html/capi-secret.php`): el `.htaccess` impide verlo desde la web y el `.gitignore` lo protege de una limpieza de archivos sin versionar, pero no está garantizado que sobreviva.
+
 3. **Comprobar.** Abre `https://haciendaprimavera.co/api/meta-eventos.php?estado`:
    - `"configurado":true` → el relevo encontró el archivo. Revisa también que `ip_detectada` sea tu IP real (si sale una IP del proveedor, avisa: habría que ajustar la cabecera que se lee).
+   - `"secreto_en"` dice en qué carpeta encontró el archivo (solo una descripción, nunca la ruta real). Después de **cualquier** publicación, vuelve a abrir esta dirección: debe seguir diciendo `configurado:true`.
    - `"ultimo_envio"` muestra el resultado del último evento que el relevo mandó a Meta: `"aceptado":true` = Meta lo recibió; `"aceptado":false` trae el `http` y el código de error de Meta (`190` = token inválido o vencido; `100` = parámetro inválido; `200`/`10` = permisos). No incluye el token ni datos del visitante.
    - `"configurado":false` → no encontró el archivo (revisa nombre y carpeta).
    - Si el navegador descarga el archivo o muestra código PHP → el plan de hosting no ejecuta PHP (ver §7).
@@ -93,7 +95,7 @@ Los nombres exactos pueden variar según el idioma y la versión de tu panel; es
 | Síntoma | Causa probable | Qué hacer |
 |---|---|---|
 | `?estado` descarga un archivo o muestra código | El hosting no ejecuta PHP | Activar PHP en hPanel; si el plan no lo permite, usar el *Conversions API Gateway* de Meta (todo desde Events Manager, con costo de nube) o una función en Vercel con el mismo contrato (`POST` con `event_name`, `event_id`, `event_source_url`, `fbp`, `fbc`, `custom_data`). |
-| `?estado` dice `configurado:false` | El archivo secreto no está donde se busca | Moverlo un nivel arriba de `public_html` o llamarlo `.capi-secret.php` dentro de `public_html`. |
+| `?estado` dice `configurado:false` | El archivo secreto no está donde se busca, o una publicación lo borró | Crearlo de nuevo en la raíz de la cuenta (la carpeta que contiene `domains`), fuera de `public_html`. |
 | En «Probar eventos» solo sale **Navegador** | Falta `capiUrl`, el token es inválido o el código de prueba no está puesto | Ver `error_log` de PHP en hPanel: el relevo escribe `[meta-capi] … HTTP …` (nunca el token). |
 | En «Probar eventos» salen los dos pero **sin deduplicar** | El nombre o el `event_id` no coinciden | No se debe editar `send()`; revisar versiones. |
 | EMQ muy bajo | No hay correo/teléfono | Es esperado; ver §2. |

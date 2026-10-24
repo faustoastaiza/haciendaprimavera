@@ -12,6 +12,9 @@
 
   # Bloquear cualquier carpeta/archivo oculto (.git, .claude, .env...) salvo .well-known
   RewriteRule (^|/)\.(?!well-known(/|$)) - [F,L]
+
+  # El archivo secreto del relevo de Meta jamás se sirve por la web (PHP lo lee desde el disco)
+  RewriteRule (^|/)capi-secret\.php$ - [F,L]
 </IfModule>
 
 # Sin listado de directorios

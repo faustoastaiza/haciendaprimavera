@@ -42,10 +42,42 @@ function responder($codigo, $cuerpo = null)
     exit;
 }
 
+// Dónde puede estar el archivo secreto, de la ubicación más segura a la menos. Solo etiquetas en el diagnóstico: nunca rutas del servidor.
+function rutas_secreto()
+{
+    $r = [];
+    $agregar = function ($ruta, $etiqueta) use (&$r) {
+        if (!isset($r[$ruta])) {   // si dos caminos son la misma ruta, vale la etiqueta del primero
+            $r[$ruta] = $etiqueta;
+        }
+    };
+    foreach ([2 => 'una carpeta por encima del sitio', 3 => 'dos carpetas por encima del sitio', 4 => 'tres carpetas por encima del sitio'] as $n => $etiqueta) {
+        $agregar(dirname(__DIR__, $n) . '/capi-secret.php', $etiqueta);
+    }
+    $casa = getenv('HOME');
+    if (!$casa && function_exists('posix_getpwuid') && function_exists('posix_geteuid')) {
+        $u = @posix_getpwuid(@posix_geteuid());
+        $casa = $u['dir'] ?? '';
+    }
+    if ($casa) {
+        $agregar(rtrim($casa, '/') . '/capi-secret.php', 'raíz de la cuenta');
+    }
+    if (!empty($_SERVER['DOCUMENT_ROOT'])) {
+        $raiz = rtrim($_SERVER['DOCUMENT_ROOT'], '/');
+        $agregar(dirname($raiz) . '/capi-secret.php', 'una carpeta por encima de la raíz web');
+        $agregar($raiz . '/.capi-secret.php', 'archivo oculto dentro del sitio (poco seguro)');
+        $agregar($raiz . '/capi-secret.php', 'dentro del sitio (poco seguro)');
+    }
+    $agregar(dirname(__DIR__) . '/.capi-secret.php', 'archivo oculto dentro del sitio (poco seguro)');
+    $agregar(dirname(__DIR__) . '/capi-secret.php', 'dentro del sitio (poco seguro)');
+    return $r;
+}
+
 function cargar_config()
 {
     $cfg = [];
-    foreach ([__DIR__ . '/../../capi-secret.php', __DIR__ . '/../.capi-secret.php'] as $ruta) {
+    $donde = '';
+    foreach (rutas_secreto() as $ruta => $etiqueta) {
         if (is_file($ruta)) {
             try {
                 $x = include $ruta;
@@ -55,10 +87,12 @@ function cargar_config()
             }
             if (is_array($x)) {
                 $cfg = $x;
+                $donde = $etiqueta;
                 break;
             }
         }
     }
+    $cfg['__ubicacion'] = $donde;
     foreach (['pixel_id' => 'META_PIXEL_ID', 'access_token' => 'META_ACCESS_TOKEN', 'test_event_code' => 'META_TEST_EVENT_CODE',
         'graph_version' => 'META_GRAPH_VERSION', 'graph_base' => 'META_GRAPH_BASE', 'allowed_hosts' => 'META_ALLOWED_HOSTS'] as $k => $e) {
         $v = getenv($e);
@@ -148,7 +182,7 @@ function manejar()
     if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
         if (isset($_GET['estado'])) {
             responder(200, ['ok' => true, 'configurado' => $configurado, 'modo_prueba' => !empty($cfg['test_event_code']),
-                'version_api' => $cfg['graph_version'] ?? HP_VERSION, 'ip_detectada' => ip_cliente(), 'curl' => function_exists('curl_init'), 'ultimo_envio' => leer_ultimo()]);
+                'version_api' => $cfg['graph_version'] ?? HP_VERSION, 'ip_detectada' => ip_cliente(), 'curl' => function_exists('curl_init'), 'secreto_en' => $cfg['__ubicacion'] ?: null, 'ultimo_envio' => leer_ultimo()]);
         }
         header('Allow: POST');
         responder(405, ['ok' => false, 'error' => 'metodo']);
