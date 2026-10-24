@@ -3380,8 +3380,9 @@ html:not(.js) .calif-head, html:not(.js) .calif-sub, html:not(.js) .calif-q, htm
     // Déjalo vacío si el píxel lo instala GTM: un mismo ID nunca va en los dos sitios.
     pixelId: '1879621982910759',
     // Relevo de la API de conversiones (servidor): api/meta-eventos.php. Vacío = los eventos solo salen del navegador.
-    // El token de Meta NO va aquí: vive en un archivo secreto en el servidor (docs/capi-meta.md). Sin ese archivo, el relevo no hace nada.
-    capiUrl: '',
+    // El token de Meta NO va aquí: vive en un archivo secreto en el servidor (docs/capi-meta.md). Sin ese archivo el relevo
+    // responde 204 y no hace nada; en cuanto el archivo existe, los eventos empiezan a salir también por el servidor.
+    capiUrl: '/api/meta-eventos.php',
     destino: '#contacto',   // sección con el botón único de WhatsApp
     precio: '#precio',      // bloque de precio que mide VioPrecio
     // Calidad del lead: umbrales iniciales, para ajustar con datos reales
