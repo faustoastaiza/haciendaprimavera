@@ -31,18 +31,16 @@ El **token de acceso nunca está en el navegador ni en el repositorio** (el repo
 ## 3. Puesta en marcha (una sola vez, la hace quien administra el hosting)
 
 1. **Token.** Events Manager → *PIXEL HACIENDA* → **Configuración** → *API de conversiones* → **Generar token de acceso**. Se muestra una sola vez. **No lo pegues en chats, correos ni en el repositorio**; si se filtra, reemplázalo (ver §6).
-2. **Archivo secreto.** En hPanel → *Administrador de archivos* crea `capi-secret.php` **fuera de `public_html`**: en la carpeta raíz de la cuenta (la que contiene `domains`) o, si no la ves, una carpeta por encima de `public_html`. Contenido:
+2. **Archivo secreto.** En hPanel → *Administrador de archivos*, en la carpeta raíz de la cuenta (la que contiene `domains`) o, si no la ves, una carpeta por encima de `public_html`, crea un archivo de texto llamado **`capi-secret.txt`** con estas líneas (sin comillas ni punto y coma; el orden da igual):
 
-   ```php
-   <?php
-   return [
-       'pixel_id'        => '1879621982910759',
-       'access_token'    => 'PEGA_AQUÍ_EL_TOKEN',
-       'test_event_code' => '',   // opcional: el código de «Probar eventos» (TEST…); bórralo al terminar
-   ];
+   ```
+   pixel_id=1879621982910759
+   access_token=PEGA_AQUÍ_EL_TOKEN
    ```
 
-   El relevo busca ese archivo en varias carpetas por encima del sitio y en la raíz de la cuenta. **Importante:** el 24-oct-2026 el primer archivo desapareció tras una publicación automática, así que **no lo pongas dentro de `public_html`**. Si no hay más remedio, el relevo también acepta `public_html/.capi-secret.php` (o `public_html/capi-secret.php`): el `.htaccess` impide verlo desde la web y el `.gitignore` lo protege de una limpieza de archivos sin versionar, pero no está garantizado que sobreviva.
+   Opcional: una tercera línea `test_event_code=TEST…` (el código de «Probar eventos»; bórrala al terminar). Alternativa: un `capi-secret.php` con `<?php return ['pixel_id' => '…', 'access_token' => '…'];` (la primera línea debe ser exactamente `<?php`; una comilla tipográfica o un `;` de menos lo rompe, por eso el `.txt` es lo recomendado).
+
+   El relevo busca ese archivo en varias carpetas por encima del sitio y en la raíz de la cuenta. **Importante:** el 24-oct-2026 el primer archivo desapareció tras una publicación automática, así que **no lo pongas dentro de `public_html`**. Si no hay más remedio, el relevo también acepta `public_html/.capi-secret.php` (solo en formato PHP): el `.htaccess` impide verlo desde la web y el `.gitignore` lo protege de una limpieza de archivos sin versionar, pero no está garantizado que sobreviva.
 
 3. **Comprobar.** Abre `https://haciendaprimavera.co/api/meta-eventos.php?estado`:
    - `"configurado":true` → el relevo encontró el archivo. Revisa también que `ip_detectada` sea tu IP real (si sale una IP del proveedor, avisa: habría que ajustar la cabecera que se lee).
@@ -98,7 +96,7 @@ Los nombres exactos pueden variar según el idioma y la versión de tu panel; es
 | Síntoma | Causa probable | Qué hacer |
 |---|---|---|
 | `?estado` descarga un archivo o muestra código | El hosting no ejecuta PHP | Activar PHP en hPanel; si el plan no lo permite, usar el *Conversions API Gateway* de Meta (todo desde Events Manager, con costo de nube) o una función en Vercel con el mismo contrato (`POST` con `event_name`, `event_id`, `event_source_url`, `fbp`, `fbc`, `custom_data`). |
-| `?estado` dice `configurado:false` | El archivo secreto no está donde se busca, o una publicación lo borró | Crearlo de nuevo en la raíz de la cuenta (la carpeta que contiene `domains`), fuera de `public_html`. |
+| `?estado` dice `configurado:false` | El archivo no está donde se busca, tiene un error o una publicación lo borró | Mirar `buscado` y `parecidos` en `?estado`: dicen carpeta por carpeta qué pasó (p. ej. `error de sintaxis en la línea 1`). Crear `capi-secret.txt` en la raíz de la cuenta (la carpeta que contiene `domains`). |
 | En «Probar eventos» solo sale **Navegador** | Falta `capiUrl`, el token es inválido o el código de prueba no está puesto | Ver `error_log` de PHP en hPanel: el relevo escribe `[meta-capi] … HTTP …` (nunca el token). |
 | En «Probar eventos» salen los dos pero **sin deduplicar** | El nombre o el `event_id` no coinciden | No se debe editar `send()`; revisar versiones. |
 | EMQ muy bajo | No hay correo/teléfono | Es esperado; ver §2. |

@@ -9,8 +9,10 @@
  *
  * EL TOKEN NO VA EN ESTE ARCHIVO NI EN EL REPOSITORIO (el repositorio es público). Vive en un archivo PHP que solo existe en el
  * servidor y que este script busca fuera del sitio (ver rutas_secreto()): lo mejor es la raíz de la cuenta, la carpeta que contiene
- * «domains». Contenido (ver docs/capi-meta.md):
- *   <?php return ['pixel_id' => '…', 'access_token' => '…', 'test_event_code' => ''];
+ * «domains». Lo más fácil es un archivo de texto capi-secret.txt con dos líneas (ver docs/capi-meta.md):
+ *   pixel_id=…
+ *   access_token=…
+ * (también vale un capi-secret.php con <?php return ['pixel_id' => '…', 'access_token' => '…'];)
  * Si el servidor lo permite también se leen las variables de entorno META_PIXEL_ID, META_ACCESS_TOKEN y META_TEST_EVENT_CODE.
  *
  * Sin configuración responde 204 y no hace nada (así la página no muestra errores). Para comprobar que PHP corre, que el archivo
@@ -76,17 +78,16 @@ function responder_ya()
     return false;
 }
 
-// Dónde puede estar el archivo secreto, de la ubicación más segura a la menos. En el diagnóstico solo salen etiquetas, nunca rutas.
+// Dónde puede estar el archivo secreto, de la ubicación más segura a la menos. Hay dos formatos:
+//   capi-secret.txt  → texto simple, dos líneas «pixel_id=…» y «access_token=…» (el más fácil: sin comillas ni punto y coma)
+//   capi-secret.php  → un arreglo de PHP (<?php return ['pixel_id' => '…', 'access_token' => '…'];)
+// El .txt solo se acepta FUERA del sitio. En el diagnóstico solo salen etiquetas, nunca rutas.
 function rutas_secreto()
 {
-    $r = [];
-    $agregar = function ($ruta, $etiqueta) use (&$r) {
-        if (!isset($r[$ruta])) {   // si dos caminos son la misma ruta, vale la etiqueta del primero
-            $r[$ruta] = $etiqueta;
-        }
-    };
+    $fuera = [];   // carpeta => etiqueta
     foreach ([2 => 'una carpeta por encima del sitio', 3 => 'dos carpetas por encima del sitio', 4 => 'tres carpetas por encima del sitio'] as $n => $etiqueta) {
-        $agregar(dirname(__DIR__, $n) . '/capi-secret.php', $etiqueta);
+        $c = dirname(__DIR__, $n);
+        $fuera[$c] = $fuera[$c] ?? $etiqueta;
     }
     $casa = getenv('HOME');
     if (!$casa && function_exists('posix_getpwuid') && function_exists('posix_geteuid')) {
@@ -94,38 +95,65 @@ function rutas_secreto()
         $casa = $u['dir'] ?? '';
     }
     if ($casa) {
-        $agregar(rtrim($casa, '/') . '/capi-secret.php', 'raíz de la cuenta');
+        $c = rtrim($casa, '/');
+        $fuera[$c] = $fuera[$c] ?? 'raíz de la cuenta';
     }
-    if (!empty($_SERVER['DOCUMENT_ROOT'])) {
-        $raiz = rtrim($_SERVER['DOCUMENT_ROOT'], '/');
-        $agregar(dirname($raiz) . '/capi-secret.php', 'una carpeta por encima de la raíz web');
-        $agregar($raiz . '/.capi-secret.php', 'archivo oculto dentro del sitio (poco seguro)');
-        $agregar($raiz . '/capi-secret.php', 'dentro del sitio (poco seguro)');
+    $raiz = !empty($_SERVER['DOCUMENT_ROOT']) ? rtrim($_SERVER['DOCUMENT_ROOT'], '/') : '';
+    if ($raiz !== '') {
+        $c = dirname($raiz);
+        $fuera[$c] = $fuera[$c] ?? 'una carpeta por encima de la raíz web';
     }
-    $agregar(dirname(__DIR__) . '/.capi-secret.php', 'archivo oculto dentro del sitio (poco seguro)');
-    $agregar(dirname(__DIR__) . '/capi-secret.php', 'dentro del sitio (poco seguro)');
+    $r = [];
+    foreach ($fuera as $carpeta => $etiqueta) {
+        $r[$carpeta . '/capi-secret.php'] = ['donde' => $etiqueta, 'tipo' => 'php'];
+        $r[$carpeta . '/capi-secret.txt'] = ['donde' => $etiqueta, 'tipo' => 'txt'];
+    }
+    // Dentro del sitio (poco seguro: el .htaccess los bloquea desde la web, pero la publicación automática puede borrarlos)
+    foreach (array_filter([$raiz, dirname(__DIR__)]) as $carpeta) {
+        foreach (['/.capi-secret.php' => 'archivo oculto dentro del sitio (poco seguro)', '/capi-secret.php' => 'dentro del sitio (poco seguro)'] as $nombre => $etiqueta) {
+            $r[$carpeta . $nombre] = $r[$carpeta . $nombre] ?? ['donde' => $etiqueta, 'tipo' => 'php'];
+        }
+    }
     return $r;
 }
 
-// Lee el archivo secreto SIN dejar que escriba nada en la respuesta. Si el archivo no empieza con <?php, PHP lo imprimiría tal cual
-// (con el token adentro) en la respuesta pública: por eso toda su salida se descarta.
-function leer_secreto($ruta)
+// Lee el archivo secreto SIN dejar que escriba nada en la respuesta. Si un .php no empieza con <?php, PHP lo imprimiría tal cual
+// (con el token adentro) en la respuesta pública: por eso toda su salida se descarta. Devuelve [datos o null, estado].
+function leer_secreto($ruta, $tipo)
 {
     $x = null;
     $estado = 'ok';
-    ob_start();
-    try {
-        $x = include $ruta;
-    } catch (Throwable $e) {
-        $estado = 'error de sintaxis';
-    }
-    $sobra = ob_get_clean();
-    if ($estado === 'ok') {
-        if (!is_array($x)) {
-            $estado = $sobra !== '' && $sobra !== false ? 'no empieza con <?php' : 'no devuelve una lista (falta «return [ … ];»)';
-        } elseif (empty($x['pixel_id']) || empty($x['access_token'])) {
-            $estado = 'faltan pixel_id o access_token';
+    if ($tipo === 'txt') {
+        $x = [];
+        $texto = preg_replace('/^\xEF\xBB\xBF/', '', (string) @file_get_contents($ruta));
+        foreach (preg_split('/\R/', $texto) as $linea) {
+            $linea = trim($linea);
+            if ($linea === '' || $linea[0] === '#' || $linea[0] === ';') {
+                continue;
+            }
+            if (preg_match('/^([A-Za-z_]+)\s*[:=]\s*(.*)$/', $linea, $m)) {
+                $v = trim(trim($m[2]), " \t\"'`“”‘’");   // sin comillas, rectas o tipográficas
+                if ($v !== '' && in_array(strtolower($m[1]), ['pixel_id', 'access_token', 'test_event_code', 'graph_version'], true)) {
+                    $x[strtolower($m[1])] = $v;
+                }
+            }
         }
+    } else {
+        ob_start();
+        try {
+            $x = include $ruta;
+        } catch (ParseError $e) {
+            $estado = 'error de sintaxis en la línea ' . (int) $e->getLine();   // solo el número: el mensaje podría citar el token
+        } catch (Throwable $e) {
+            $estado = 'error al leer el archivo';
+        }
+        $sobra = ob_get_clean();
+        if ($estado === 'ok' && !is_array($x)) {
+            $estado = $sobra !== '' && $sobra !== false ? 'no empieza con <?php' : 'no devuelve una lista (falta «return [ … ];»)';
+        }
+    }
+    if ($estado === 'ok' && (empty($x['pixel_id']) || empty($x['access_token']))) {
+        $estado = 'faltan pixel_id o access_token';
     }
     return [$estado === 'ok' ? $x : null, $estado];
 }
@@ -135,20 +163,22 @@ function cargar_config()
     $cfg = [];
     $donde = '';
     $buscado = [];
-    foreach (rutas_secreto() as $ruta => $etiqueta) {
+    foreach (rutas_secreto() as $ruta => $info) {
         $estado = 'no existe';
         if (is_file($ruta)) {
             if (!is_readable($ruta)) {
                 $estado = 'existe, pero PHP no puede leerlo (permisos)';
             } else {
-                list($x, $estado) = leer_secreto($ruta);
+                list($x, $estado) = leer_secreto($ruta, $info['tipo']);
                 if ($x !== null && $donde === '') {
                     $cfg = $x;
-                    $donde = $etiqueta;
+                    $donde = $info['donde'] . ' (' . basename($ruta) . ')';
                 }
             }
         }
-        $buscado[] = ['donde' => $etiqueta, 'estado' => $estado];
+        if ($estado !== 'no existe' || $info['tipo'] === 'php') {   // lo que no existe se muestra una vez por carpeta
+            $buscado[] = ['donde' => $info['donde'], 'archivo' => basename($ruta), 'estado' => $estado];
+        }
     }
     $cfg['__ubicacion'] = $donde;
     $cfg['__buscado'] = $buscado;
@@ -168,15 +198,15 @@ function nombres_parecidos()
 {
     $out = [];
     $vistas = [];
-    foreach (rutas_secreto() as $ruta => $etiqueta) {
+    foreach (rutas_secreto() as $ruta => $info) {
         $carpeta = dirname($ruta);
         if (isset($vistas[$carpeta])) {
             continue;
         }
         $vistas[$carpeta] = true;
         foreach ((array) @scandir($carpeta) as $nombre) {
-            if (is_string($nombre) && preg_match('/^\.?capi/i', $nombre) && basename($ruta) !== $nombre && count($out) < 12) {
-                $out[] = ['nombre' => cortar($nombre, 60), 'en' => $etiqueta];
+            if (is_string($nombre) && preg_match('/^\.?capi/i', $nombre) && !in_array($nombre, ['capi-secret.php', 'capi-secret.txt', '.capi-secret.php'], true) && count($out) < 12) {
+                $out[] = ['nombre' => cortar($nombre, 60), 'en' => $info['donde']];
             }
         }
     }

@@ -23,3 +23,5 @@ capi-secret.php
 .capi-secret.php
 **/capi-secret.php
 **/.capi-secret.php
+capi-secret.*
+**/capi-secret.*
