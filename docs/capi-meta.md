@@ -105,4 +105,6 @@ Los nombres exactos pueden variar según el idioma y la versión de tu panel; es
 
 Servidor PHP local + un «Meta» de mentira + Chrome sin cabeza: el relevo rechaza lo inválido (origen, JSON, evento, `event_id`, tamaño, topes por IP y totales), filtra campos y valores, ignora IP falsas, reenvía a `/v25.0/<píxel>/events` con el token solo en el servidor, y el `event_id` del servidor coincide con el `eventID` del píxel. Con la librería real del píxel (envío bloqueado): un solo `PageView`, ninguno por saltos de ancla y `eid` en cada evento.
 
+**Verificado en producción el 24-oct-2026:** con `capi-secret.txt` en la carpeta de arriba, `?estado` devolvió `configurado:true` y, tras un clic de prueba en el sitio, `ultimo_envio` = `aceptado:true` (HTTP 200 de Meta). El archivo sobrevivió a una publicación posterior.
+
 Fuentes: [Mejores prácticas de la API de conversiones](https://developers.facebook.com/docs/marketing-api/conversions-api/best-practices) · [Graph API v25.0](https://developers.facebook.com/docs/graph-api/changelog/version25.0).
