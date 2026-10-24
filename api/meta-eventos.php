@@ -21,6 +21,7 @@
 
 error_reporting(0);
 ini_set('display_errors', '0');
+header_remove('X-Powered-By');
 
 const HP_EVENTOS = ['ContactoWhatsApp', 'ClicIntencionPrecio', 'VioPrecio'];
 const HP_HOSTS = ['haciendaprimavera.co', 'www.haciendaprimavera.co'];
@@ -46,7 +47,12 @@ function cargar_config()
     $cfg = [];
     foreach ([__DIR__ . '/../../capi-secret.php', __DIR__ . '/../.capi-secret.php'] as $ruta) {
         if (is_file($ruta)) {
-            $x = include $ruta;
+            try {
+                $x = include $ruta;
+            } catch (Throwable $e) {   // archivo secreto con un error de sintaxis: se trata como «sin configurar»
+                error_log('[meta-capi] el archivo secreto no se pudo leer: ' . get_class($e));
+                $x = null;
+            }
             if (is_array($x)) {
                 $cfg = $x;
                 break;
@@ -120,125 +126,140 @@ function dentro_del_limite($ip)
     return $d['n'] <= HP_MAX_POR_MINUTO;
 }
 
-$cfg = cargar_config();
-$configurado = !empty($cfg['pixel_id']) && !empty($cfg['access_token']);
-$permitidos = !empty($cfg['allowed_hosts']) ? $cfg['allowed_hosts'] : HP_HOSTS;
+function manejar()
+{
+    $cfg = cargar_config();
+    $configurado = !empty($cfg['pixel_id']) && !empty($cfg['access_token']);
+    $permitidos = !empty($cfg['allowed_hosts']) ? $cfg['allowed_hosts'] : HP_HOSTS;
 
-// GET: solo diagnóstico. Sirve para ver que PHP corre en este hosting y que el archivo secreto se leyó (sin revelar secretos).
-if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
-    if (isset($_GET['estado'])) {
-        responder(200, ['ok' => true, 'configurado' => $configurado, 'modo_prueba' => !empty($cfg['test_event_code']),
-            'version_api' => $cfg['graph_version'] ?? HP_VERSION, 'ip_detectada' => ip_cliente(), 'php' => PHP_VERSION, 'curl' => function_exists('curl_init')]);
-    }
-    header('Allow: POST');
-    responder(405, ['ok' => false, 'error' => 'metodo']);
-}
-
-if (!$configurado) {
-    responder(204);
-}
-
-// Solo el propio sitio puede mandar eventos
-$origen = host_de($_SERVER['HTTP_ORIGIN'] ?? '') ?: host_de($_SERVER['HTTP_REFERER'] ?? '');
-if (!in_array($origen, $permitidos, true)) {
-    responder(403, ['ok' => false, 'error' => 'origen']);
-}
-
-$ip = ip_cliente();
-if (!dentro_del_limite($ip !== '' ? $ip : 'sin-ip')) {
-    responder(429, ['ok' => false, 'error' => 'limite']);
-}
-
-$crudo = file_get_contents('php://input', false, null, 0, 8193);
-if ($crudo === false || strlen($crudo) > 8192) {
-    responder(413, ['ok' => false, 'error' => 'tamano']);
-}
-$in = json_decode($crudo, true);
-if (!is_array($in)) {
-    responder(400, ['ok' => false, 'error' => 'json']);
-}
-
-$nombre = $in['event_name'] ?? '';
-$id = $in['event_id'] ?? '';
-if (!is_string($nombre) || !in_array($nombre, HP_EVENTOS, true) || !is_string($id) || !preg_match('/^[A-Za-z0-9_-]{8,64}$/', $id)) {
-    responder(400, ['ok' => false, 'error' => 'evento']);
-}
-
-// URL de la página: del propio sitio y sin fragmento (#…); si algo no cuadra, la portada
-$url = (string) ($in['event_source_url'] ?? '');
-$url = strlen($url) <= 500 && in_array(host_de($url), $permitidos, true) ? explode('#', $url)[0] : 'https://' . $permitidos[0] . '/';
-
-$user = [];
-if ($ip !== '') {
-    $user['client_ip_address'] = $ip;
-}
-$ua = substr((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 512);
-if ($ua !== '') {
-    $user['client_user_agent'] = $ua;
-}
-$fbp = $in['fbp'] ?? '';
-if (is_string($fbp) && preg_match('/^fb\.[0-2]\.\d{10,13}\.\d{4,20}$/', $fbp)) {
-    $user['fbp'] = $fbp;
-}
-$fbc = $in['fbc'] ?? '';
-if (is_string($fbc) && preg_match('/^fb\.[0-2]\.\d{10,13}\.[A-Za-z0-9_-]{8,200}$/', $fbc)) {
-    $user['fbc'] = $fbc;
-}
-if (empty($user['client_user_agent'])) {
-    responder(400, ['ok' => false, 'error' => 'usuario']);   // Meta exige agente de usuario en eventos web
-}
-
-// Datos del evento: solo los campos conocidos y valores simples (los booleanos como texto, igual que los manda el píxel)
-$datos = [];
-if (isset($in['custom_data']) && is_array($in['custom_data'])) {
-    foreach ($in['custom_data'] as $k => $v) {
-        if (!in_array($k, HP_CAMPOS, true)) {
-            continue;
+    // GET: solo diagnóstico. Sirve para ver que PHP corre en este hosting y que el archivo secreto se leyó (sin revelar secretos).
+    if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+        if (isset($_GET['estado'])) {
+            responder(200, ['ok' => true, 'configurado' => $configurado, 'modo_prueba' => !empty($cfg['test_event_code']),
+                'version_api' => $cfg['graph_version'] ?? HP_VERSION, 'ip_detectada' => ip_cliente(), 'curl' => function_exists('curl_init')]);
         }
-        if (is_bool($v)) {
-            $datos[$k] = $v ? 'true' : 'false';
-        } elseif (is_int($v) || is_float($v)) {
-            $datos[$k] = $v;
-        } elseif (is_string($v)) {
-            $datos[$k] = cortar($v, 100);
-        }
+        header('Allow: POST');
+        responder(405, ['ok' => false, 'error' => 'metodo']);
     }
-}
 
-$evento = ['event_name' => $nombre, 'event_time' => time(), 'event_id' => $id, 'event_source_url' => $url, 'action_source' => 'website', 'user_data' => $user];
-if ($datos) {
-    $evento['custom_data'] = $datos;
-}
-$cuerpo = ['data' => [$evento], 'access_token' => $cfg['access_token']];
-if (!empty($cfg['test_event_code'])) {
-    $cuerpo['test_event_code'] = $cfg['test_event_code'];
-}
+    if (!$configurado) {
+        responder(204);
+    }
 
-$base = rtrim($cfg['graph_base'] ?? 'https://graph.facebook.com', '/');
-$destino = $base . '/' . ($cfg['graph_version'] ?? HP_VERSION) . '/' . rawurlencode((string) $cfg['pixel_id']) . '/events';
-$json = json_encode($cuerpo, JSON_UNESCAPED_UNICODE);
-$estado = 0;
-$respuesta = '';
-if (function_exists('curl_init')) {
-    $ch = curl_init($destino);
-    curl_setopt_array($ch, [CURLOPT_POST => true, CURLOPT_HTTPHEADER => ['Content-Type: application/json'], CURLOPT_POSTFIELDS => $json,
-        CURLOPT_RETURNTRANSFER => true, CURLOPT_CONNECTTIMEOUT => 4, CURLOPT_TIMEOUT => 8]);
-    $respuesta = (string) curl_exec($ch);
-    $estado = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-} else {
-    $ctx = stream_context_create(['http' => ['method' => 'POST', 'header' => "Content-Type: application/json\r\n", 'content' => $json, 'timeout' => 8, 'ignore_errors' => true]]);
-    $respuesta = (string) @file_get_contents($destino, false, $ctx);
-    foreach ((array) ($http_response_header ?? []) as $h) {
-        if (preg_match('#^HTTP/\S+\s+(\d{3})#', $h, $m)) {
-            $estado = (int) $m[1];
+    // Solo el propio sitio puede mandar eventos
+    $origen = host_de($_SERVER['HTTP_ORIGIN'] ?? '') ?: host_de($_SERVER['HTTP_REFERER'] ?? '');
+    if (!in_array($origen, $permitidos, true)) {
+        responder(403, ['ok' => false, 'error' => 'origen']);
+    }
+
+    $ip = ip_cliente();
+    if (!dentro_del_limite($ip !== '' ? $ip : 'sin-ip')) {
+        responder(429, ['ok' => false, 'error' => 'limite']);
+    }
+
+    $crudo = file_get_contents('php://input', false, null, 0, 8193);
+    if ($crudo === false || strlen($crudo) > 8192) {
+        responder(413, ['ok' => false, 'error' => 'tamano']);
+    }
+    $in = json_decode($crudo, true);
+    if (!is_array($in)) {
+        responder(400, ['ok' => false, 'error' => 'json']);
+    }
+
+    $nombre = $in['event_name'] ?? '';
+    $id = $in['event_id'] ?? '';
+    if (!is_string($nombre) || !in_array($nombre, HP_EVENTOS, true) || !is_string($id) || !preg_match('/^[A-Za-z0-9_-]{8,64}$/', $id)) {
+        responder(400, ['ok' => false, 'error' => 'evento']);
+    }
+
+    // URL de la página: del propio sitio y sin fragmento (#…); si algo no cuadra, la portada
+    $url = (string) ($in['event_source_url'] ?? '');
+    $url = strlen($url) <= 500 && in_array(host_de($url), $permitidos, true) ? explode('#', $url)[0] : 'https://' . $permitidos[0] . '/';
+
+    $user = [];
+    if ($ip !== '') {
+        $user['client_ip_address'] = $ip;
+    }
+    $ua = substr((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 512);
+    if ($ua !== '') {
+        $user['client_user_agent'] = $ua;
+    }
+    $fbp = $in['fbp'] ?? '';
+    if (is_string($fbp) && preg_match('/^fb\.[0-2]\.\d{10,13}\.\d{4,20}$/', $fbp)) {
+        $user['fbp'] = $fbp;
+    }
+    $fbc = $in['fbc'] ?? '';
+    if (is_string($fbc) && preg_match('/^fb\.[0-2]\.\d{10,13}\.[A-Za-z0-9_-]{8,200}$/', $fbc)) {
+        $user['fbc'] = $fbc;
+    }
+    if (empty($user['client_user_agent'])) {
+        responder(400, ['ok' => false, 'error' => 'usuario']);   // Meta exige agente de usuario en eventos web
+    }
+
+    // Datos del evento: solo los campos conocidos y valores simples (los booleanos como texto, igual que los manda el píxel)
+    $datos = [];
+    if (isset($in['custom_data']) && is_array($in['custom_data'])) {
+        foreach ($in['custom_data'] as $k => $v) {
+            if (!in_array($k, HP_CAMPOS, true)) {
+                continue;
+            }
+            if (is_bool($v)) {
+                $datos[$k] = $v ? 'true' : 'false';
+            } elseif (is_int($v) || is_float($v)) {
+                $datos[$k] = $v;
+            } elseif (is_string($v)) {
+                $datos[$k] = cortar($v, 100);
+            }
         }
     }
+
+    $evento = ['event_name' => $nombre, 'event_time' => time(), 'event_id' => $id, 'event_source_url' => $url, 'action_source' => 'website', 'user_data' => $user];
+    if ($datos) {
+        $evento['custom_data'] = $datos;
+    }
+    $cuerpo = ['data' => [$evento], 'access_token' => $cfg['access_token']];
+    if (!empty($cfg['test_event_code'])) {
+        $cuerpo['test_event_code'] = $cfg['test_event_code'];
+    }
+
+    $base = rtrim($cfg['graph_base'] ?? 'https://graph.facebook.com', '/');
+    $destino = $base . '/' . ($cfg['graph_version'] ?? HP_VERSION) . '/' . rawurlencode((string) $cfg['pixel_id']) . '/events';
+    // El agente de usuario viene del visitante y puede traer bytes inválidos (o quedar cortado a media letra): se sustituyen, no se pierde el evento
+    $json = json_encode($cuerpo, JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE);
+    if ($json === false) {
+        error_log('[meta-capi] no se pudo codificar el evento ' . $nombre);
+        responder(204);
+    }
+    $estado = 0;
+    $respuesta = '';
+    if (function_exists('curl_init')) {
+        $ch = curl_init($destino);
+        curl_setopt_array($ch, [CURLOPT_POST => true, CURLOPT_HTTPHEADER => ['Content-Type: application/json'], CURLOPT_POSTFIELDS => $json,
+            CURLOPT_RETURNTRANSFER => true, CURLOPT_CONNECTTIMEOUT => 4, CURLOPT_TIMEOUT => 8]);
+        $respuesta = (string) curl_exec($ch);
+        $estado = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+    } else {
+        $ctx = stream_context_create(['http' => ['method' => 'POST', 'header' => "Content-Type: application/json\r\n", 'content' => $json, 'timeout' => 8, 'ignore_errors' => true]]);
+        $respuesta = (string) @file_get_contents($destino, false, $ctx);
+        foreach ((array) ($http_response_header ?? []) as $h) {
+            if (preg_match('#^HTTP/\S+\s+(\d{3})#', $h, $m)) {
+                $estado = (int) $m[1];
+            }
+        }
+    }
+
+    $resp = json_decode($respuesta, true);
+    if ($estado === 200 && is_array($resp) && !empty($resp['events_received'])) {
+        responder(204);
+    }
+    error_log('[meta-capi] ' . $nombre . ' → HTTP ' . $estado . ' ' . substr($respuesta, 0, 300));   // nunca incluye el token
+    responder(502, ['ok' => false, 'error' => 'meta']);
 }
 
-$resp = json_decode($respuesta, true);
-if ($estado === 200 && is_array($resp) && !empty($resp['events_received'])) {
-    responder(204);
+try {
+    manejar();
+} catch (Throwable $e) {
+    error_log('[meta-capi] excepción ' . get_class($e) . ': ' . $e->getMessage());   // nunca incluye el token
+    responder(204);   // el visitante nunca debe ver un error por culpa del relevo
 }
-error_log('[meta-capi] ' . $nombre . ' → HTTP ' . $estado . ' ' . substr($respuesta, 0, 300));   // nunca incluye el token
-responder(502, ['ok' => false, 'error' => 'meta']);

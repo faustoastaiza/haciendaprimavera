@@ -30,7 +30,7 @@ El **token de acceso nunca está en el navegador ni en el repositorio** (el repo
 
 ## 3. Puesta en marcha (una sola vez, la hace quien administra el hosting)
 
-1. **Token.** Events Manager → *PIXEL HACIENDA* → **Configuración** → *API de conversiones* → **Generar token de acceso**. Se muestra una sola vez. **No lo pegues en chats, correos ni en el repositorio**; si se filtra, genera uno nuevo y borra el anterior.
+1. **Token.** Events Manager → *PIXEL HACIENDA* → **Configuración** → *API de conversiones* → **Generar token de acceso**. Se muestra una sola vez. **No lo pegues en chats, correos ni en el repositorio**; si se filtra, reemplázalo (ver §6).
 2. **Archivo secreto.** En hPanel → *Administrador de archivos*, dentro de la carpeta del dominio (**un nivel arriba de `public_html`**), crea `capi-secret.php`:
 
    ```php
@@ -85,7 +85,7 @@ Los nombres exactos pueden variar según el idioma y la versión de tu panel; es
 - Token solo en el servidor; el repositorio es público: **nunca** lo pegues en `index.html`, `api/` ni `docs/`. `tools/check_trazabilidad.py` falla si encuentra algo con forma de token de Meta.
 - El relevo acepta solo `POST` desde `haciendaprimavera.co`, hasta 8 KB, hasta 60 solicitudes por minuto y por IP, solo los tres eventos de la lista y solo los campos conocidos. Las respuestas de error no incluyen el token.
 - Aviso al visitante: el formulario y el pie de página dicen que la página usa el Píxel de Meta (con el resto de herramientas). Si se agrega o quita una herramienta, hay que actualizar esas dos frases.
-- Si el token se filtró (por ejemplo, se pegó en un chat), **genera uno nuevo en Events Manager y reemplázalo en el archivo secreto**; el viejo deja de servir al generar el nuevo.
+- Si el token se filtró (por ejemplo, se pegó en un chat), **reemplázalo**: genera uno nuevo en Events Manager, ponlo en el archivo secreto y **revoca el anterior** (Configuración del negocio → Usuarios del sistema, o donde tu panel muestre los tokens del conjunto de datos). Comprueba después en «Probar eventos» que los eventos de Servidor siguen llegando.
 
 ## 7. Si algo falla
 
