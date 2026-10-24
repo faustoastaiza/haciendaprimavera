@@ -42,7 +42,7 @@ El **token de acceso nunca está en el navegador ni en el repositorio** (el repo
    ];
    ```
 
-   Si el administrador de archivos no deja salir de `public_html`, crea el archivo **oculto** `public_html/.capi-secret.php` (con punto): el `.htaccess` bloquea desde la web todo lo que empieza por punto. El archivo no se versiona ni lo toca la publicación automática desde GitHub.
+   Si el administrador de archivos no deja salir de `public_html`, crea el archivo **oculto** `public_html/.capi-secret.php` (con punto): el `.htaccess` bloquea desde la web todo lo que empieza por punto. Esa opción es la menos segura y no está garantizado que sobreviva a la publicación automática desde GitHub: si después de publicar `?estado` vuelve a decir `configurado:false`, muévelo a la carpeta de arriba (la ubicación recomendada, que la publicación no toca).
 3. **Comprobar.** Abre `https://haciendaprimavera.co/api/meta-eventos.php?estado`:
    - `"configurado":true` → el relevo encontró el archivo. Revisa también que `ip_detectada` sea tu IP real (si sale una IP del proveedor, avisa: habría que ajustar la cabecera que se lee).
    - `"configurado":false` → no encontró el archivo (revisa nombre y carpeta).
