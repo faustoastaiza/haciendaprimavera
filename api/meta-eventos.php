@@ -96,6 +96,18 @@ function host_de($url)
     return $h ? strtolower($h) : '';
 }
 
+// Resultado del último envío a Meta, para el diagnóstico (?estado). Solo guarda hora, evento y códigos: nunca el token ni datos del visitante
+function registrar_ultimo($datos)
+{
+    @file_put_contents(sys_get_temp_dir() . '/hp_capi-ultimo.json', json_encode($datos), LOCK_EX);
+}
+
+function leer_ultimo()
+{
+    $d = json_decode((string) @file_get_contents(sys_get_temp_dir() . '/hp_capi-ultimo.json'), true);
+    return is_array($d) ? $d : null;
+}
+
 // Tope de solicitudes por IP y minuto (archivo temporal): frena a quien intente llenar de basura el píxel
 function dentro_del_limite($ip)
 {
@@ -136,7 +148,7 @@ function manejar()
     if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
         if (isset($_GET['estado'])) {
             responder(200, ['ok' => true, 'configurado' => $configurado, 'modo_prueba' => !empty($cfg['test_event_code']),
-                'version_api' => $cfg['graph_version'] ?? HP_VERSION, 'ip_detectada' => ip_cliente(), 'curl' => function_exists('curl_init')]);
+                'version_api' => $cfg['graph_version'] ?? HP_VERSION, 'ip_detectada' => ip_cliente(), 'curl' => function_exists('curl_init'), 'ultimo_envio' => leer_ultimo()]);
         }
         header('Allow: POST');
         responder(405, ['ok' => false, 'error' => 'metodo']);
@@ -250,7 +262,11 @@ function manejar()
     }
 
     $resp = json_decode($respuesta, true);
-    if ($estado === 200 && is_array($resp) && !empty($resp['events_received'])) {
+    $aceptado = $estado === 200 && is_array($resp) && !empty($resp['events_received']);
+    registrar_ultimo(['t' => time(), 'evento' => $nombre, 'http' => $estado, 'aceptado' => $aceptado,
+        'meta_codigo' => is_array($resp) && isset($resp['error']['code']) ? (int) $resp['error']['code'] : null,
+        'meta_subcodigo' => is_array($resp) && isset($resp['error']['error_subcode']) ? (int) $resp['error']['error_subcode'] : null]);
+    if ($aceptado) {
         responder(204);
     }
     error_log('[meta-capi] ' . $nombre . ' → HTTP ' . $estado . ' ' . substr($respuesta, 0, 300));   // nunca incluye el token
@@ -261,5 +277,6 @@ try {
     manejar();
 } catch (Throwable $e) {
     error_log('[meta-capi] excepción ' . get_class($e) . ': ' . $e->getMessage());   // nunca incluye el token
+    registrar_ultimo(['t' => time(), 'aceptado' => false, 'excepcion' => get_class($e)]);
     responder(204);   // el visitante nunca debe ver un error por culpa del relevo
 }
